@@ -18,6 +18,13 @@ public class ManageHospital implements HospitalService{
         this.hospitalMapper = hospitalMapper;
     }
 
+    /**
+     * <p>
+     * A new Hospital persist to database then create DTO to send back response
+     *
+     * @param addHospital parameter {@link AddHospital} that convert to entity model and persist to database.
+     * @return return created {@link AddHospital} to response back to API.
+     */
     @Override
     public ResponseModel addNewHospital(AddHospital addHospital) {
 

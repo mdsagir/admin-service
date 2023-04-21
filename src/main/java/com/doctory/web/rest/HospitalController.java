@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -33,9 +34,20 @@ public class HospitalController {
         this.addHospitalValidator = addHospitalValidator;
     }
 
+    /**
+     * {@code POST /hospital create a new user}
+     *
+     * <p>
+     * create a new hospital if name is not exists.
+     *
+     * @param hospital payload {@link AddHospital} Its hold the hospital information along
+     *                 with his address.
+     * @return Response entity {@link ResponseEntity} with status {@code 201 (Created)}
+     * with success or with status {@code 400 (Bad requested)}
+     */
     @PostMapping
     public ResponseEntity<ResponseModel> createHotel(@Valid @RequestBody AddHospital hospital) {
         ResponseModel responseModel = hospitalService.addNewHospital(hospital);
-       return new ResponseEntity<>(responseModel, CREATED);
+        return new ResponseEntity<>(responseModel, CREATED);
     }
 }
