@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.CREATED;
+
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/hospital")
@@ -75,6 +76,13 @@ public class HospitalController {
     public ResponseEntity<List<HospitalSearchDto>> getHospitalInfo(@RequestParam String search) {
         List<HospitalSearchDto> hospitalSearch = hospitalService.searchHospital(search);
         return new ResponseEntity<>(hospitalSearch, OK);
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<Set<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
+                                                           @RequestParam(required = false,defaultValue = "0") Integer pageSize) {
+        Set<HospitalDto> hospitals = hospitalService.getAllHospital(pageNo, pageSize);
+        return new ResponseEntity<>(hospitals, OK);
     }
 
 }

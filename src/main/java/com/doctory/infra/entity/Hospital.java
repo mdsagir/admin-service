@@ -1,13 +1,6 @@
 package com.doctory.infra.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -21,6 +14,8 @@ public class Hospital {
     @JoinColumn(name = "address_id")
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Address address;
+    @Embedded
+    private Common common;
 
     public Long getId() {
         return id;
@@ -53,5 +48,13 @@ public class Hospital {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Common getCommon() {
+        return common;
+    }
+
+    public void setCommon(Common common) {
+        this.common = common;
     }
 }

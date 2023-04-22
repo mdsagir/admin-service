@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ManageHospital implements HospitalService {
@@ -56,7 +57,15 @@ public class ManageHospital implements HospitalService {
     @Override
     public List<HospitalSearchDto> searchHospital(String hospitalName) {
         PageRequest pageRequest = PageRequest.of(0, 50);
-        return hospitalRepo.searchByHospitalNameContaining(hospitalName,pageRequest);
+        return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
+    }
+
+
+    @Override
+    public Set<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
+        int page = pageSize == 0 ? 10 : pageSize;
+        PageRequest pageRequest = PageRequest.of(pageNo, page);
+        return (Set<HospitalDto>) hospitalRepo.getAllHospital(pageRequest).getContent();
     }
 
     private Hospital findById(Long id) {
