@@ -1,6 +1,6 @@
 package com.doctory.web.request;
 
-public record AddHospital(
+public record HospitalRequest(
         String hospitalName,
         String foundedAt,
         String addressLine1,
