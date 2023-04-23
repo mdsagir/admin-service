@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
-
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.CREATED;
-
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/hospital")
@@ -60,6 +57,15 @@ public class HospitalController {
         return new ResponseEntity<>(responseModel, CREATED);
     }
 
+    /**
+     * {@code GET /hospital find the hospital }
+     * <p>
+     *   Find the Hospital info for given unique identifier get, if the hospital are available return
+     *   {@link HospitalDto} with {@code 200 (Success)}, if hospital not exist api return {@code 404 (Not found)}
+     *
+     * @param id input hospital id
+     * @return Response entity {@link HospitalDto} contain all information of particular hospital
+     */
     @GetMapping
     public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam Long id) {
         HospitalDto hospitalInfo = hospitalService.getHospitalInfo(id);
@@ -79,9 +85,9 @@ public class HospitalController {
     }
 
     @GetMapping("all")
-    public ResponseEntity<Set<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
+    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
                                                            @RequestParam(required = false,defaultValue = "0") Integer pageSize) {
-        Set<HospitalDto> hospitals = hospitalService.getAllHospital(pageNo, pageSize);
+        List<HospitalDto> hospitals = hospitalService.getAllHospital(pageNo, pageSize);
         return new ResponseEntity<>(hospitals, OK);
     }
 

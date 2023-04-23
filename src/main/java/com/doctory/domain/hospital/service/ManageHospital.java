@@ -1,5 +1,6 @@
 package com.doctory.domain.hospital.service;
 
+import com.doctory.common.DataNotFoundException;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.hospital.dto.HospitalSearchDto;
@@ -7,11 +8,10 @@ import com.doctory.domain.hospital.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ManageHospital implements HospitalService {
@@ -62,13 +62,14 @@ public class ManageHospital implements HospitalService {
 
 
     @Override
-    public Set<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
-        int page = pageSize == 0 ? 10 : pageSize;
+    public List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
+        int page = pageSize == 0 ? 2 : pageSize;
         PageRequest pageRequest = PageRequest.of(pageNo, page);
-        return (Set<HospitalDto>) hospitalRepo.getAllHospital(pageRequest).getContent();
+        Page<HospitalDto> allHospital = hospitalRepo.getAllHospital(pageRequest);
+        return allHospital.getContent();
     }
 
     private Hospital findById(Long id) {
-        return hospitalRepo.getHospitalById(id).orElseThrow();
+        return hospitalRepo.getHospitalById(id).orElseThrow(() -> new DataNotFoundException(id+" is not found"));
     }
 }

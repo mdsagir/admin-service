@@ -1,6 +1,5 @@
 package com.doctory;
 
-import com.doctory.entity.*;
 import com.doctory.infra.entity.*;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
