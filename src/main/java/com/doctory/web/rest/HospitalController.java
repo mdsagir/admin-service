@@ -53,7 +53,7 @@ public class HospitalController {
      */
     @PostMapping
     public ResponseEntity<ResponseModel> createHospital(@Valid @RequestBody HospitalRequest hospital) {
-        ResponseModel responseModel = hospitalService.addNewHospital(hospital);
+        var responseModel = hospitalService.addNewHospital(hospital);
         return new ResponseEntity<>(responseModel, CREATED);
     }
 
@@ -68,26 +68,26 @@ public class HospitalController {
      */
     @GetMapping
     public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam Long id) {
-        HospitalDto hospitalInfo = hospitalService.getHospitalInfo(id);
+        var hospitalInfo = hospitalService.getHospitalInfo(id);
         return new ResponseEntity<>(hospitalInfo, OK);
     }
 
     @PutMapping
     public ResponseEntity<HospitalDto> updateHospitalInfo(@RequestParam Long id, @Valid @RequestBody HospitalRequest hospital) {
-        HospitalDto hospitalDto = hospitalService.updateHospitalInfo(id, hospital);
+        var hospitalDto = hospitalService.updateHospitalInfo(id, hospital);
         return new ResponseEntity<>(hospitalDto, OK);
     }
 
     @GetMapping("search")
     public ResponseEntity<List<HospitalSearchDto>> getHospitalInfo(@RequestParam String search) {
-        List<HospitalSearchDto> hospitalSearch = hospitalService.searchHospital(search);
+        var hospitalSearch = hospitalService.searchHospital(search);
         return new ResponseEntity<>(hospitalSearch, OK);
     }
 
     @GetMapping("all")
     public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
                                                            @RequestParam(required = false,defaultValue = "0") Integer pageSize) {
-        List<HospitalDto> hospitals = hospitalService.getAllHospital(pageNo, pageSize);
+        var hospitals = hospitalService.getAllHospital(pageNo, pageSize);
         return new ResponseEntity<>(hospitals, OK);
     }
 

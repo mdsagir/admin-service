@@ -8,7 +8,6 @@ import com.doctory.domain.hospital.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -33,8 +32,7 @@ public class ManageHospital implements HospitalService {
      */
     @Override
     public ResponseModel addNewHospital(HospitalRequest hospitalRequest) {
-
-        Hospital hospital = hospitalMapper.toHospitalEntity(hospitalRequest);
+        var hospital = hospitalMapper.toHospitalEntity(hospitalRequest);
         hospitalRepo.save(hospital);
         return ResponseModel.of("Hospital added successfully");
 
@@ -42,30 +40,30 @@ public class ManageHospital implements HospitalService {
 
     @Override
     public HospitalDto getHospitalInfo(Long id) {
-        Hospital hospital = findById(id);
+        var hospital = findById(id);
         return hospitalMapper.toHospitalDto(hospital);
     }
 
     @Override
     public HospitalDto updateHospitalInfo(Long id, HospitalRequest hospitalRequest) {
-        Hospital hospital = findById(id);
-        Hospital hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
-        Hospital updatedHospital = hospitalRepo.save(hospitalEntity);
+        var hospital = findById(id);
+        var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
+        var updatedHospital = hospitalRepo.save(hospitalEntity);
         return hospitalMapper.toHospitalDto(updatedHospital);
     }
 
     @Override
     public List<HospitalSearchDto> searchHospital(String hospitalName) {
-        PageRequest pageRequest = PageRequest.of(0, 50);
+        var pageRequest = PageRequest.of(0, 50);
         return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
     }
 
 
     @Override
     public List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
-        int page = pageSize == 0 ? 2 : pageSize;
-        PageRequest pageRequest = PageRequest.of(pageNo, page);
-        Page<HospitalDto> allHospital = hospitalRepo.getAllHospital(pageRequest);
+        var page = pageSize == 0 ? 2 : pageSize;
+        var pageRequest = PageRequest.of(pageNo, page);
+        var allHospital = hospitalRepo.getAllHospital(pageRequest);
         return allHospital.getContent();
     }
 
