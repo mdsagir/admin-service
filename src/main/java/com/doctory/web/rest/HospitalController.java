@@ -50,7 +50,7 @@ public class HospitalController {
      * after persist {@link HospitalRequest} all property to the database and return with success message with status {@code 201 CREATED}.
      *
      * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
-     * @return Response entity {@link ResponseEntity} with status {@code 201 (Created)}
+     * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 201 (Created)}
      * @throws IllegalArgumentException              in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}.
      * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure ...
      */
