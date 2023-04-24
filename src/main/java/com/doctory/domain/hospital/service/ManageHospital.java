@@ -1,6 +1,7 @@
 package com.doctory.domain.hospital.service;
 
 import com.doctory.common.DataNotFoundException;
+import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.hospital.dto.HospitalSearchDto;
@@ -8,13 +9,17 @@ import com.doctory.domain.hospital.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class ManageHospital implements HospitalService {
 
+    private static final Logger log = LoggerFactory.getLogger(ManageHospital.class);
     private final HospitalRepo hospitalRepo;
     private final HospitalMapper hospitalMapper;
 
@@ -32,10 +37,16 @@ public class ManageHospital implements HospitalService {
      */
     @Override
     public ResponseModel addNewHospital(HospitalRequest hospitalRequest) {
-        var hospital = hospitalMapper.toHospitalEntity(hospitalRequest);
-        hospitalRepo.save(hospital);
-        return ResponseModel.of("Hospital added successfully");
-
+        String hospitalName = hospitalRequest.hospitalName();
+        try {
+            var hospital = hospitalMapper.toHospitalEntity(hospitalRequest);
+            hospitalRepo.save(hospital);
+            log.info("Hospital name is saved {}", hospitalName);
+            return ResponseModel.of("Hospital added successfully");
+        } catch (Exception exception) {
+            log.error("Error while adding new hospital {}", hospitalRequest);
+            throw new SomethingWentWrong("Unable to save the hospital");
+        }
     }
 
     @Override
@@ -68,6 +79,6 @@ public class ManageHospital implements HospitalService {
     }
 
     private Hospital findById(Long id) {
-        return hospitalRepo.getHospitalById(id).orElseThrow(() -> new DataNotFoundException(id+" is not found"));
+        return hospitalRepo.getHospitalById(id).orElseThrow(() -> new DataNotFoundException(id + " is not found"));
     }
 }

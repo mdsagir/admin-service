@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
+
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.List;
 
 @RestController
@@ -41,15 +43,16 @@ public class HospitalController {
     }
 
     /**
-     * {@code POST /hospital create a new user}
-     *
+     * {@code POST /hospital} resource create a new hospital
      * <p>
-     * create a new hospital if name is not exists.
      *
-     * @param hospital payload {@link HospitalRequest} Its hold the hospital information along
-     *                 with his address.
+     * Primarily validate all mandatory fields, then checks database unique constraints (given hospital name existence)
+     * after persist {@link HospitalRequest} all property to the database and return with success message with status {@code 201 CREATED}.
+     *
+     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
      * @return Response entity {@link ResponseEntity} with status {@code 201 (Created)}
-     * with success or with status {@code 400 (Bad requested)}
+     * @throws IllegalArgumentException              in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}.
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure ...
      */
     @PostMapping
     public ResponseEntity<ResponseModel> createHospital(@Valid @RequestBody HospitalRequest hospital) {
@@ -60,8 +63,8 @@ public class HospitalController {
     /**
      * {@code GET /hospital find the hospital }
      * <p>
-     *   Find the Hospital info for given unique identifier get, if the hospital are available return
-     *   {@link HospitalDto} with {@code 200 (Success)}, if hospital not exist api return {@code 404 (Not found)}
+     * Find the Hospital info for given unique identifier get, if the hospital are available return
+     * {@link HospitalDto} with {@code 200 (Success)}, if hospital not exist api return {@code 404 (Not found)}
      *
      * @param id input hospital id
      * @return Response entity {@link HospitalDto} contain all information of particular hospital
@@ -85,8 +88,7 @@ public class HospitalController {
     }
 
     @GetMapping("all")
-    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
-                                                           @RequestParam(required = false,defaultValue = "0") Integer pageSize) {
+    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
         var hospitals = hospitalService.getAllHospital(pageNo, pageSize);
         return new ResponseEntity<>(hospitals, OK);
     }
