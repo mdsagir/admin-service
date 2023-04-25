@@ -1,6 +1,7 @@
 package com.doctory.web.hospital;
 
 
+import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,9 @@ class HotelCheckHotelNameExistValidationTest {
     private  AddHospitalValidator addHospitalValidator;
     @Test
     void test() {
-        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", "Address1", "Address2", "898765", "Bihar", "India");
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+
+        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
         Errors errors = new BeanPropertyBindingResult(hospitalRequest, "");
         addHospitalValidator.validate(hospitalRequest,errors);
     }

@@ -5,7 +5,7 @@ import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.hospital.dto.HospitalSearchDto;
-import com.doctory.domain.hospital.mapper.HospitalMapper;
+import com.doctory.domain.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
@@ -13,17 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-public class ManageHospital implements HospitalService {
+public class HospitalManager implements HospitalService {
 
-    private static final Logger log = LoggerFactory.getLogger(ManageHospital.class);
+    private static final Logger log = LoggerFactory.getLogger(HospitalManager.class);
     private final HospitalRepo hospitalRepo;
     private final HospitalMapper hospitalMapper;
 
-    public ManageHospital(HospitalRepo hospitalRepo, HospitalMapper hospitalMapper) {
+    public HospitalManager(HospitalRepo hospitalRepo, HospitalMapper hospitalMapper) {
         this.hospitalRepo = hospitalRepo;
         this.hospitalMapper = hospitalMapper;
     }

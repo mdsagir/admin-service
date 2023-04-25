@@ -1,5 +1,6 @@
 package com.doctory.web.json;
 
+import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.HospitalRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,31 +22,36 @@ class HospitalJSONSerializedTest {
     @Test
     void test_hospital_request_body_serialized() throws IOException {
 
-        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", "Address1", "Address2", "898765", "Bihar", "India");
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
+
         var jsonContent = requestJacksonTester.write(hospitalRequest);
         assertThat(jsonContent).extractingJsonPathStringValue("@.hospitalName").isEqualTo(hospitalRequest.hospitalName());
         assertThat(jsonContent).extractingJsonPathStringValue("@.foundedAt").isEqualTo(hospitalRequest.foundedAt());
-        assertThat(jsonContent).extractingJsonPathStringValue("@.addressLine1").isEqualTo(hospitalRequest.addressLine1());
-        assertThat(jsonContent).extractingJsonPathStringValue("@.addressLine2").isEqualTo(hospitalRequest.addressLine2());
-        assertThat(jsonContent).extractingJsonPathStringValue("@.pinCode").isEqualTo(hospitalRequest.pinCode());
-        assertThat(jsonContent).extractingJsonPathStringValue("@.state").isEqualTo(hospitalRequest.state());
-        assertThat(jsonContent).extractingJsonPathStringValue("@.country").isEqualTo(hospitalRequest.country());
+        assertThat(jsonContent).extractingJsonPathStringValue("@.addressRequest.addressLine1").isEqualTo(addressRequest.addressLine1());
+        assertThat(jsonContent).extractingJsonPathStringValue("@.addressRequest.addressLine2").isEqualTo(addressRequest.addressLine2());
+        assertThat(jsonContent).extractingJsonPathStringValue("@.addressRequest.pinCode").isEqualTo(addressRequest.pinCode());
+        assertThat(jsonContent).extractingJsonPathStringValue("@.addressRequest.state").isEqualTo(addressRequest.state());
+        assertThat(jsonContent).extractingJsonPathStringValue("@.addressRequest.country").isEqualTo(addressRequest.country());
 
     }
 
     @Test
     void test_hospital_request_body_deserialized() throws Exception {
-        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", "Address1", "Address2", "898765", "Bihar", "India");
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
 
         var jsonContent = """
                 {
                    "hospitalName":"AK Hospital",
                    "foundedAt":"1989",
-                   "addressLine1":"Address1",
-                   "addressLine2":"Address2",
-                   "pinCode":"898765",
-                   "state":"Bihar",
-                   "country":"India"
+                   "addressRequest":{
+                      "addressLine1":"Address1",
+                      "addressLine2":"Address2",
+                      "pinCode":"898765",
+                      "state":"Bihar",
+                      "country":"India"
+                   }
                 }
                 """;
         ObjectContent<HospitalRequest> parse = requestJacksonTester.parse(jsonContent);

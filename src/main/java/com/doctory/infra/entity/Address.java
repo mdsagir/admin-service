@@ -17,6 +17,16 @@ public class Address {
     private String country;
     private String pinCode;
 
+    public Address() {
+    }
+
+    public Address(String addressLine1, String addressLine2, String state, String country, String pinCode) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.state = state;
+        this.country = country;
+        this.pinCode = pinCode;
+    }
 
     public Long getId() {
         return id;

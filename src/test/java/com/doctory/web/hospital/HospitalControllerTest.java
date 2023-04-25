@@ -4,6 +4,7 @@ import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
+import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.rest.HospitalController;
 import com.doctory.web.validator.AddHospitalValidator;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.Optional;
@@ -47,7 +47,8 @@ class HospitalControllerTest {
     @Test
     void test_create_new_hospital_and_return_success_201_status() throws Exception {
 
-        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", "Address1", "Address2", "898765", "Bihar", "India");
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
         var responseModel = new ResponseModel("Hospital added successfully");
         given(hospitalService.addNewHospital(hospitalRequest)).willReturn(responseModel);
         var mvcResult = mockMvc.perform(post("/api/hospital")
@@ -61,8 +62,9 @@ class HospitalControllerTest {
     }
 
     @Test
-    void test_create_new_and_validate() throws Exception {
-        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", "Address1", "Address2", "898765", "Bihar", "India");
+    void test_create_new_and_validate() {
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
 
         var hospital=new Hospital();
         hospital.setHospitalName(hospital.getHospitalName());
