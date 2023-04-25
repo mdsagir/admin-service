@@ -13,7 +13,7 @@ public interface HospitalService {
     List<HospitalSearchDto> searchHospital(String hospitalName);
 
     HospitalDto getHospitalInfo(Long id);
-    HospitalDto updateHospitalInfo(Long id,HospitalRequest hospitalRequest);
+    ResponseModel updateHospitalInfo(Long id,HospitalRequest hospitalRequest);
 
     List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize);
 }

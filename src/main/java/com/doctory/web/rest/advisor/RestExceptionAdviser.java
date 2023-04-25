@@ -6,6 +6,7 @@ import com.doctory.domain.ResponseModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,5 +39,11 @@ public class RestExceptionAdviser {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ResponseModel> handleRequestParameterException(MissingServletRequestParameterException exception) {
+        ResponseModel responseModel = ResponseModel.of(exception.getMessage());
+        return new ResponseEntity<>(responseModel, BAD_REQUEST);
     }
 }

@@ -7,7 +7,10 @@ import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/hospital")
 public class HospitalController {
@@ -43,9 +47,9 @@ public class HospitalController {
     }
 
     /**
-     * {@code POST /hospital} resource create a new hospital
+     * {@code POST /api/hospital} API create a new hospital
      * <p>
-     *
+     * <p>
      * Primarily validate all mandatory fields, then checks database unique constraints (given hospital name existence)
      * after persist {@link HospitalRequest} all property to the database and return with success message with status {@code 201 CREATED}.
      *
@@ -61,26 +65,55 @@ public class HospitalController {
     }
 
     /**
-     * {@code GET /hospital find the hospital }
+     * {@code GET api/hospital} get hospital info by id
      * <p>
-     * Find the Hospital info for given unique identifier get, if the hospital are available return
-     * {@link HospitalDto} with {@code 200 (Success)}, if hospital not exist api return {@code 404 (Not found)}
      *
-     * @param id input hospital id
-     * @return Response entity {@link HospitalDto} contain all information of particular hospital
+     * @param id input request parameter, It's not be {@literal null}.
+     * @return {@link ResponseEntity} with {@link HospitalDto} contain all information of particular hospital with {@code 200} Success
+     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
+     *                                                  then validation exception are triggered and response give the {@code 400 Bad request}
+     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
+     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping
-    public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam Long id) {
+    public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam(required = false) @NotEmpty(message = "The id must be defined") Long id) {
         var hospitalInfo = hospitalService.getHospitalInfo(id);
         return new ResponseEntity<>(hospitalInfo, OK);
     }
 
+    /**
+     * {@code PUT api/hospital} update hospital info by id
+     * <p>
+     * Finds the existence Hospital by given {@literal  id} and update Hospital data by {@link HospitalRequest}
+     *
+     * @param id       input request parameter, It's not be {@literal null}, that fetch the existing Hospital details
+     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
+     * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
+     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
+     *                                                  and response give the {@code 400 Bad request}
+     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
+     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     */
+
     @PutMapping
-    public ResponseEntity<HospitalDto> updateHospitalInfo(@RequestParam Long id, @Valid @RequestBody HospitalRequest hospital) {
-        var hospitalDto = hospitalService.updateHospitalInfo(id, hospital);
-        return new ResponseEntity<>(hospitalDto, OK);
+    public ResponseEntity<ResponseModel> updateHospitalInfo(@RequestParam Long id, @Valid @RequestBody HospitalRequest hospital) {
+        var responseModel = hospitalService.updateHospitalInfo(id, hospital);
+        return new ResponseEntity<>(responseModel, OK);
     }
 
+    /**
+     * {@code PUT api/hospital/search} search hospital by text
+     * <p>
+     * Perform search by given text with {@literal 50} size pagination
+     *
+     * @param id       input request parameter, It's not be {@literal null}, that fetch the existing Hospital details
+     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
+     * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
+     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
+     *                                                  and response give the {@code 400 Bad request}
+     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
+     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     */
     @GetMapping("search")
     public ResponseEntity<List<HospitalSearchDto>> getHospitalInfo(@RequestParam String search) {
         var hospitalSearch = hospitalService.searchHospital(search);

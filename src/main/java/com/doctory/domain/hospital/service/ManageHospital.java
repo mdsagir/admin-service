@@ -56,11 +56,11 @@ public class ManageHospital implements HospitalService {
     }
 
     @Override
-    public HospitalDto updateHospitalInfo(Long id, HospitalRequest hospitalRequest) {
+    public ResponseModel updateHospitalInfo(Long id, HospitalRequest hospitalRequest) {
         var hospital = findById(id);
         var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
-        var updatedHospital = hospitalRepo.save(hospitalEntity);
-        return hospitalMapper.toHospitalDto(updatedHospital);
+        hospitalRepo.save(hospitalEntity);
+        return ResponseModel.of("Hospital updated successfully");
     }
 
     @Override
