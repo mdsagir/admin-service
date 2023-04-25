@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +25,13 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 import java.util.List;
 
+/**
+ * <p>
+ * {@link  HospitalController} are used for {@code CRUD} operation for the Hostel module,
+ * that perform {@code add}, {@code update}, {@code find}, {@code findAll}, {@code search}
+ * operation
+ */
+
 @Validated
 @RestController
 @RequestMapping("/api/hospital")
@@ -36,11 +42,17 @@ public class HospitalController {
     private final AddHospitalValidator addHospitalValidator;
 
 
+    /**
+     * Binding apply for validation
+     *
+     * @param webDataBinder spring boot are apply {@link  WebDataBinder} for request body validation
+     */
     @InitBinder
     public void bindValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(addHospitalValidator);
     }
 
+    // dependency injection by constructor injection
     public HospitalController(HospitalService hospitalService, AddHospitalValidator addHospitalValidator) {
         this.hospitalService = hospitalService;
         this.addHospitalValidator = addHospitalValidator;
@@ -104,15 +116,10 @@ public class HospitalController {
     /**
      * {@code PUT api/hospital/search} search hospital by text
      * <p>
-     * Perform search by given text with {@literal 50} size pagination
+     * Perform search by given text with {@literal 50} size pagination, if not match any result return empty array
      *
-     * @param id       input request parameter, It's not be {@literal null}, that fetch the existing Hospital details
-     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
-     * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
-     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
-     *                                                  and response give the {@code 400 Bad request}
-     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
-     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     * @param search input request parameter, It's not be {@literal null}.
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("search")
     public ResponseEntity<List<HospitalSearchDto>> getHospitalInfo(@RequestParam String search) {
@@ -120,6 +127,14 @@ public class HospitalController {
         return new ResponseEntity<>(hospitalSearch, OK);
     }
 
+    /**
+     * {@code PUT api/hospital/all} search hospital by text
+     *
+     * @param pageNo   current page no which data are display
+     * @param pageSize array page size default is {@literal 10} size
+     * @return {@link ResponseEntity} with {@link List} of {@link HospitalDto} hospital details based on page nation with {@code 200} Success
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     */
     @GetMapping("all")
     public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
         var hospitals = hospitalService.getAllHospital(pageNo, pageSize);

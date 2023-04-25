@@ -28,13 +28,6 @@ public class ManageHospital implements HospitalService {
         this.hospitalMapper = hospitalMapper;
     }
 
-    /**
-     * <p>
-     * A new Hospital persist to database then create DTO to send back response
-     *
-     * @param hospitalRequest parameter {@link HospitalRequest} that convert to entity model and persist to database.
-     * @return return created {@link HospitalRequest} to response back to API.
-     */
     @Override
     public ResponseModel addNewHospital(HospitalRequest hospitalRequest) {
         String hospitalName = hospitalRequest.hospitalName();
@@ -44,7 +37,7 @@ public class ManageHospital implements HospitalService {
             log.info("Hospital name is saved {}", hospitalName);
             return ResponseModel.of("Hospital added successfully");
         } catch (Exception exception) {
-            log.error("Error while adding new hospital {}", hospitalRequest);
+            log.error("Error while adding new hospital {}", exception.toString());
             throw new SomethingWentWrong("Unable to save the hospital");
         }
     }
@@ -57,10 +50,16 @@ public class ManageHospital implements HospitalService {
 
     @Override
     public ResponseModel updateHospitalInfo(Long id, HospitalRequest hospitalRequest) {
-        var hospital = findById(id);
-        var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
-        hospitalRepo.save(hospitalEntity);
-        return ResponseModel.of("Hospital updated successfully");
+        try {
+            var hospital = findById(id);
+            var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
+            hospitalRepo.save(hospitalEntity);
+            log.info("Update successfully hostel info for given id {}", id);
+            return ResponseModel.of("Hospital updated successfully");
+        } catch (Exception exception) {
+            log.error("Error while updating hospital {}", exception.toString());
+            throw new SomethingWentWrong("Unable to update the hospital");
+        }
     }
 
     @Override
@@ -72,13 +71,22 @@ public class ManageHospital implements HospitalService {
 
     @Override
     public List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
-        var page = pageSize == 0 ? 2 : pageSize;
+        var page = pageSize == 0 ? 10 : pageSize;
         var pageRequest = PageRequest.of(pageNo, page);
         var allHospital = hospitalRepo.getAllHospital(pageRequest);
         return allHospital.getContent();
     }
 
+    /**
+     * {@code findById} used JPA repository to find {@link Hospital} database entity
+     *
+     * @param id entity id
+     * @return {@link Hospital} database entity
+     */
     private Hospital findById(Long id) {
-        return hospitalRepo.getHospitalById(id).orElseThrow(() -> new DataNotFoundException(id + " is not found"));
+        return hospitalRepo.getHospitalById(id).orElseThrow(() -> {
+            log.error("Unable to find any hospital for given {}", id);
+            return new DataNotFoundException(id + " is not found");
+        });
     }
 }

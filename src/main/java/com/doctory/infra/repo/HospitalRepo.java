@@ -11,14 +11,14 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface HospitalRepo extends JpaRepository<Hospital,Long> {
+public interface HospitalRepo extends JpaRepository<Hospital, Long> {
 
     Optional<Hospital> findByHospitalName(String hospitalName);
 
     @Query("""
-        SELECT new com.doctory.domain.hospital.dto.HospitalSearchDto(h.id,h.hospitalName)\s
-        FROM Hospital h where LOWER(h.hospitalName) LIKE LOWER (concat('%',:hospitalName,'%'))
-        """)
+            SELECT new com.doctory.domain.hospital.dto.HospitalSearchDto(h.id,h.hospitalName)\s
+            FROM Hospital h where LOWER(h.hospitalName) LIKE LOWER (concat('%',:hospitalName,'%'))
+            """)
     List<HospitalSearchDto> searchByHospitalNameContaining(String hospitalName, Pageable pageable);
 
 
@@ -28,8 +28,6 @@ public interface HospitalRepo extends JpaRepository<Hospital,Long> {
     @Query(value = """
             SELECT new com.doctory.domain.hospital.dto.HospitalDto(h) FROM Hospital h LEFT JOIN FETCH h.address\s
             ORDER BY h.common.createdDate desc\s
-            """
-    ,countQuery = "SELECT COUNT(h.id) FROM Hospital h"
-            )
+            """, countQuery = "SELECT COUNT(h.id) FROM Hospital h")
     Page<HospitalDto> getAllHospital(Pageable pageable);
 }
