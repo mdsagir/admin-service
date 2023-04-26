@@ -2,11 +2,12 @@ package com.doctory.infra.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 
 @Entity
 public class Doctor {
@@ -22,7 +23,10 @@ public class Doctor {
     private Person person;
     @JoinColumn(name = "hospital_id")
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Hospital hospital;
+    private Branch branch;
+    @Embedded
+    private Common common;
+
 
     public Long getId() {
         return id;
@@ -64,11 +68,19 @@ public class Doctor {
         this.person = person;
     }
 
-    public Hospital getHospital() {
-        return hospital;
+    public Branch getBranch() {
+        return branch;
     }
 
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public Common getCommon() {
+        return common;
+    }
+
+    public void setCommon(Common common) {
+        this.common = common;
     }
 }
