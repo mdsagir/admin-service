@@ -2,7 +2,7 @@ package com.doctory.web.rest;
 
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
-import com.doctory.domain.hospital.dto.HospitalSearchDto;
+import com.doctory.domain.SearchDto;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
@@ -122,7 +122,7 @@ public class HospitalController {
      * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("search")
-    public ResponseEntity<List<HospitalSearchDto>> getHospitalInfo(@RequestParam String search) {
+    public ResponseEntity<List<SearchDto>> getHospitalInfo(@RequestParam String search) {
         var hospitalSearch = hospitalService.searchHospital(search);
         return new ResponseEntity<>(hospitalSearch, OK);
     }

@@ -3,6 +3,7 @@ package com.doctory.domain.branch.service;
 import com.doctory.common.DataNotFoundException;
 import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
+import com.doctory.domain.SearchDto;
 import com.doctory.domain.branch.dto.BranchDto;
 import com.doctory.domain.mapper.BranchMapper;
 import com.doctory.infra.entity.Branch;
@@ -11,7 +12,10 @@ import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.BranchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.doctory.domain.branch.dto.BranchDto.of;
 
@@ -32,7 +36,6 @@ public class BranchManager implements BranchService {
 
     @Override
     public ResponseModel addNewBranch(BranchRequest branchRequest) {
-        var branchName = branchRequest.branchName();
         try {
 
             var hospitalId = branchRequest.hospitalId();
@@ -40,7 +43,7 @@ public class BranchManager implements BranchService {
             var branch = branchMapper.toEntity(branchRequest);
             branch.setHospital(hospitalRepoReference);
             branchRepo.save(branch);
-            log.info("Branch name is saved {}", branchName);
+            log.info("Branch is saved {}", branch.getId());
             return ResponseModel.of("Branch added successfully");
         } catch (Exception exception) {
             log.error("Error while adding new branch {}", exception.toString());
@@ -52,6 +55,33 @@ public class BranchManager implements BranchService {
     public BranchDto getBranchInfo(Long id) {
         var branch = findById(id);
         return of(branch);
+    }
+
+    @Override
+    public ResponseModel updateBranch(Long id, BranchRequest branchRequest) {
+        try {
+            var branch = findById(id);
+            branchMapper.toUpdateBranchEntity(branchRequest, branch);
+            branchRepo.save(branch);
+            log.info("Branch is updated {}", branch.getId());
+            return ResponseModel.of("Branch updated successfully");
+        } catch (Exception exception) {
+            log.error("Error while updating hospital {}", exception.toString());
+            throw new SomethingWentWrong("Unable to update the branch");
+        }
+    }
+
+    @Override
+    public List<SearchDto> searchBranch(String searchText) {
+        var pageRequest = PageRequest.of(0, 50);
+        return branchRepo.searchByBranchNameContaining(searchText, pageRequest);
+    }
+
+    @Override
+    public List<BranchDto> getAllBranch(Integer pageNo, Integer pageSize) {
+        var page = pageSize == 0 ? 10 : pageSize;
+        var pageRequest = PageRequest.of(pageNo, page);
+        return branchRepo.getAllBranch(pageRequest).getContent();
     }
 
     private Branch findById(Long id) {

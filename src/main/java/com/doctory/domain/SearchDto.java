@@ -1,15 +1,15 @@
-package com.doctory.domain.hospital.dto;
+package com.doctory.domain;
 
-public class HospitalSearchDto {
+public class SearchDto {
     private Long id;
     private String name;
 
-    public HospitalSearchDto(Long id, String name) {
+    public SearchDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public HospitalSearchDto() {
+    public SearchDto() {
     }
 
     public Long getId() {

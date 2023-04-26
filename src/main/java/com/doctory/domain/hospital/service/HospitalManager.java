@@ -4,7 +4,7 @@ import com.doctory.common.DataNotFoundException;
 import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
-import com.doctory.domain.hospital.dto.HospitalSearchDto;
+import com.doctory.domain.SearchDto;
 import com.doctory.domain.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
@@ -62,7 +62,7 @@ public class HospitalManager implements HospitalService {
     }
 
     @Override
-    public List<HospitalSearchDto> searchHospital(String hospitalName) {
+    public List<SearchDto> searchHospital(String hospitalName) {
         var pageRequest = PageRequest.of(0, 50);
         return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
     }

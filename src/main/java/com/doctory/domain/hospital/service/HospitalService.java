@@ -3,7 +3,7 @@ package com.doctory.domain.hospital.service;
 
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
-import com.doctory.domain.hospital.dto.HospitalSearchDto;
+import com.doctory.domain.SearchDto;
 import com.doctory.web.request.HospitalRequest;
 
 import java.util.List;
@@ -23,16 +23,16 @@ public interface HospitalService {
      * <p>
      *
      * @param text input data
-     * @return {@link  List} of {@link HospitalSearchDto} search result
+     * @return {@link  List} of {@link SearchDto} search result
      */
-    List<HospitalSearchDto> searchHospital(String text);
+    List<SearchDto> searchHospital(String text);
 
     /**
      * Find a particular hospital for given {@literal id }
      * <p>
      *
      * @param id request data to be find data from persist layer
-     * @return {@link  List} of {@link HospitalSearchDto} search result
+     * @return {@link  List} of {@link SearchDto} search result
      */
     HospitalDto getHospitalInfo(Long id);
 

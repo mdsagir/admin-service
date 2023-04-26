@@ -1,7 +1,7 @@
 package com.doctory.infra.repo;
 
 import com.doctory.domain.hospital.dto.HospitalDto;
-import com.doctory.domain.hospital.dto.HospitalSearchDto;
+import com.doctory.domain.SearchDto;
 import com.doctory.infra.entity.Hospital;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +16,10 @@ public interface HospitalRepo extends JpaRepository<Hospital, Long> {
     Optional<Hospital> findByHospitalName(String hospitalName);
 
     @Query("""
-            SELECT new com.doctory.domain.hospital.dto.HospitalSearchDto(h.id,h.hospitalName)\s
+            SELECT new com.doctory.domain.SearchDto(h.id,h.hospitalName)\s
             FROM Hospital h where LOWER(h.hospitalName) LIKE LOWER (concat('%',:hospitalName,'%'))
             """)
-    List<HospitalSearchDto> searchByHospitalNameContaining(String hospitalName, Pageable pageable);
+    List<SearchDto> searchByHospitalNameContaining(String hospitalName, Pageable pageable);
 
 
     @Query("SELECT h FROM Hospital h LEFT JOIN FETCH h.address where h.id =:id")

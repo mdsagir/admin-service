@@ -23,4 +23,13 @@ public class BranchMapper {
         branch.setAddress(addressEntity);
         return branch;
     }
+
+    public void toUpdateBranchEntity(BranchRequest branchRequest, Branch branch) {
+        var addressRequest = branchRequest.addressRequest();
+        var address = branch.getAddress();
+        commonMapper.updateAddressEntity(addressRequest,address);
+        branch.setBranchName(branchRequest.branchName());
+
+
+    }
 }
