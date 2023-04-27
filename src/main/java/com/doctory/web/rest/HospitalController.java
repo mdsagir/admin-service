@@ -82,7 +82,7 @@ public class HospitalController {
      *
      * @param id input request parameter, It's not be {@literal null}.
      * @return {@link ResponseEntity} with {@link HospitalDto} contain all information of particular hospital with {@code 200} Success
-     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
+     * @throws IllegalArgumentException                 in case the given {@literal  id parameter} of its property is {@literal empty-string} or {@literal null}
      *                                                  then validation exception are triggered and response give the {@code 400 Bad request}
      * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
      * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
