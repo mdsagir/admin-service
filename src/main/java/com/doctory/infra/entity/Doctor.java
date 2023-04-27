@@ -36,6 +36,7 @@ public class Doctor {
         this.id = id;
     }
 
+
     public String getDegree() {
         return degree;
     }
