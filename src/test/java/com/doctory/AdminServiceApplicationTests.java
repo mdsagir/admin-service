@@ -10,7 +10,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Rollback(value = false)
+@Rollback(value = true)
 class AdminServiceApplicationTests {
 
 
@@ -131,7 +131,7 @@ class AdminServiceApplicationTests {
 		doctor.setPracticeName("Medico");
 		doctor.setSpecialty("N/A");
 		doctor.setPerson(person);
-		doctor.setHospital(hospital);
+		doctor.setBranch(branch);
 		entityManager.persist(doctor);
 
 		Assertions.assertThat(doctor.getId()).isNotNull();
