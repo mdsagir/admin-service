@@ -7,7 +7,7 @@ import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -88,7 +88,7 @@ public class HospitalController {
      * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping
-    public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam(required = false) @NotEmpty(message = "The id must be defined") Long id) {
+    public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam(required = false) @NotNull(message = "The id must be defined") Long id) {
         var hospitalInfo = hospitalService.getHospitalInfo(id);
         return new ResponseEntity<>(hospitalInfo, OK);
     }
@@ -136,7 +136,8 @@ public class HospitalController {
      * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("all")
-    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
+    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
+                                                            @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
         var hospitals = hospitalService.getAllHospital(pageNo, pageSize);
         return new ResponseEntity<>(hospitals, OK);
     }
