@@ -1,7 +1,6 @@
 package com.doctory.domain.mapper;
 
 import com.doctory.infra.entity.Branch;
-import com.doctory.infra.entity.Common;
 import com.doctory.web.request.BranchRequest;
 import org.springframework.stereotype.Component;
 

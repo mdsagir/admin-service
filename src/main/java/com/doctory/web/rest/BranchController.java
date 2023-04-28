@@ -7,7 +7,7 @@ import com.doctory.domain.branch.service.BranchService;
 import com.doctory.web.request.BranchRequest;
 import com.doctory.web.validator.AddBranchValidator;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -77,7 +77,7 @@ public class BranchController {
      */
 
     @GetMapping
-    public ResponseEntity<BranchDto> getBranchInfo(@RequestParam(required = false) @NotEmpty(message = "The id must be defined") Long id) {
+    public ResponseEntity<BranchDto> getBranchInfo(@RequestParam(required = false) @NotNull(message = "The id must be defined") Long id) {
         var branchInfo = branchService.getBranchInfo(id);
         return new ResponseEntity<>(branchInfo, OK);
     }
