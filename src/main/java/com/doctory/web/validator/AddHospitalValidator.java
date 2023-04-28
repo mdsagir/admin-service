@@ -23,10 +23,10 @@ public class AddHospitalValidator implements Validator {
     }
 
     @Override
-    public void validate(@NonNull Object object,@NonNull Errors errors) {
+    public void validate(@NonNull Object object, @NonNull Errors errors) {
         var hospitalRequest = (HospitalRequest) object;
         var hospitalName = hospitalRequest.hospitalName();
         var hospitalOptional = hospitalRepo.findByHospitalName(hospitalName);
-        hospitalOptional.ifPresent(hospital -> errors.reject("Hospital name already exist"));
+        hospitalOptional.ifPresent(hospital -> errors.rejectValue("hospitalName", "field.already", hospital.getHospitalName() + " hospital name already exist"));
     }
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface BranchRepo extends JpaRepository<Branch,Long> {
 
+    Optional<Branch> findByBranchName(String branchName);
 
     @Query("SELECT b FROM Branch b LEFT JOIN FETCH b.address where b.id =:id")
     Optional<Branch> findBranchById(Long id);
