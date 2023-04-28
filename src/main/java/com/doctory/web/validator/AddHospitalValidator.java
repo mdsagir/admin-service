@@ -2,6 +2,8 @@ package com.doctory.web.validator;
 
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -10,6 +12,9 @@ import org.springframework.validation.Validator;
 
 @Component
 public class AddHospitalValidator implements Validator {
+
+    private static final Logger log = LoggerFactory.getLogger(AddHospitalValidator.class);
+
 
     private final HospitalRepo hospitalRepo;
 
@@ -27,6 +32,9 @@ public class AddHospitalValidator implements Validator {
         var hospitalRequest = (HospitalRequest) object;
         var hospitalName = hospitalRequest.hospitalName();
         var hospitalOptional = hospitalRepo.findByHospitalName(hospitalName);
-        hospitalOptional.ifPresent(hospital -> errors.rejectValue("hospitalName", "field.already", hospital.getHospitalName() + " hospital name already exist"));
+        hospitalOptional.ifPresent(hospital -> {
+            log.error("hospitalName already exist in data base");
+            errors.rejectValue("hospitalName", "field.already", hospital.getHospitalName() + " hospital name already exist");
+        });
     }
 }

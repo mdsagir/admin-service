@@ -1,4 +1,4 @@
-package com.doctory.web.hospital;
+package com.doctory.web.hospital.api;
 
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.service.HospitalService;

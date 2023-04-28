@@ -1,4 +1,4 @@
-package com.doctory.web.hospital;
+package com.doctory.web.hospital.validation;
 
 import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.HospitalRequest;

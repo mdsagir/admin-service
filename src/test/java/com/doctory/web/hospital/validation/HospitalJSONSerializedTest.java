@@ -1,4 +1,4 @@
-package com.doctory.web.json;
+package com.doctory.web.hospital.validation;
 
 import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.HospitalRequest;
@@ -55,6 +55,6 @@ class HospitalJSONSerializedTest {
                 }
                 """;
         ObjectContent<HospitalRequest> parse = requestJacksonTester.parse(jsonContent);
-        assertThat(parse).isEqualTo(hospitalRequest);
+        assertThat(parse.getObject()).isEqualTo(hospitalRequest);
     }
 }
