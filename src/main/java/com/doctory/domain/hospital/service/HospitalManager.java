@@ -9,6 +9,7 @@ import com.doctory.domain.mapper.HospitalMapper;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
+import com.doctory.web.request.UpdateHospitalRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,10 +50,11 @@ public class HospitalManager implements HospitalService {
     }
 
     @Override
-    public ResponseModel updateHospitalInfo(Long id, HospitalRequest hospitalRequest) {
+    public ResponseModel updateHospitalInfo(UpdateHospitalRequest updateHospitalRequest) {
         try {
+            var id = updateHospitalRequest.id();
             var hospital = findById(id);
-            var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
+            var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(updateHospitalRequest, hospital);
             hospitalRepo.save(hospitalEntity);
             log.info("Update successfully hostel info for given id {}", id);
             return of("Hospital updated successfully");

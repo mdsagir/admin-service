@@ -5,6 +5,7 @@ import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.SearchDto;
 import com.doctory.web.request.HospitalRequest;
+import com.doctory.web.request.UpdateHospitalRequest;
 
 import java.util.List;
 
@@ -39,11 +40,10 @@ public interface HospitalService {
     /**
      * Update hospital info for a particular hospital
      *
-     * @param id              to find which hospital are to edit
-     * @param hospitalRequest contains all the property to be updateds
+     * @param updateHospitalRequest contains all the property to be updated
      * @return {@link ResponseModel} class in case
      */
-    ResponseModel updateHospitalInfo(Long id, HospitalRequest hospitalRequest);
+    ResponseModel updateHospitalInfo(UpdateHospitalRequest updateHospitalRequest);
 
     /**
      * Find all the hospital in pagination

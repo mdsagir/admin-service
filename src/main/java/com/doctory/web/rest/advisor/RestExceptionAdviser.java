@@ -4,6 +4,8 @@ import com.doctory.common.DataNotFoundException;
 import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,16 +17,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.doctory.domain.ResponseModel.of;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class RestExceptionAdviser {
 
+    private static final Logger log = LoggerFactory.getLogger(RestExceptionAdviser.class);
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ResponseModel> handleValidationExceptions() {
+    public ResponseEntity<ResponseModel> handleValidationExceptions(RuntimeException exception) {
+        if (log.isInfoEnabled()) {
+            log.error("Error while runtime exception {}", exception.toString());
+        }
         ResponseModel responseModel = of("Unable to process the request at this time");
         return new ResponseEntity<>(responseModel, INTERNAL_SERVER_ERROR);
     }

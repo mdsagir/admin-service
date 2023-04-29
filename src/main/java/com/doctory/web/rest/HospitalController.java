@@ -5,6 +5,7 @@ import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.SearchDto;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.web.request.HospitalRequest;
+import com.doctory.web.request.UpdateHospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -111,12 +112,10 @@ public class HospitalController {
      * Finds the existence Hospital by given {@literal  id} and
      * update Hospital data by {@link HospitalRequest}
      *
-     * @param id       input request parameter, It's not be {@literal null},
-     *                 that fetch the existing Hospital details
-     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by
+     * @param updateHospitalRequest payload {@link UpdateHospitalRequest} Its JSON API request contract send by
      *                 consumer, It's not be {@literal null}.
      * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
-     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property
+     * @throws IllegalArgumentException                 in case the given {@link UpdateHospitalRequest requestBody} of its property
      *                                                  is {@literal empty-string} or {@literal null}
      *                                                  and response give the {@code 400 Bad request}
      * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available
@@ -126,8 +125,8 @@ public class HospitalController {
      */
 
     @PutMapping
-    public ResponseEntity<ResponseModel> updateHospitalInfo(@RequestParam Long id, @Valid @RequestBody HospitalRequest hospital) {
-        var responseModel = hospitalService.updateHospitalInfo(id, hospital);
+    public ResponseEntity<ResponseModel> updateHospitalInfo(@Valid @RequestBody UpdateHospitalRequest updateHospitalRequest) {
+        var responseModel = hospitalService.updateHospitalInfo(updateHospitalRequest);
         return new ResponseEntity<>(responseModel, OK);
     }
 

@@ -4,6 +4,7 @@ package com.doctory.domain.mapper;
 import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.web.request.HospitalRequest;
+import com.doctory.web.request.UpdateHospitalRequest;
 import org.springframework.stereotype.Component;
 
 
@@ -35,14 +36,14 @@ public class HospitalMapper {
         return HospitalDto.of(hospital);
     }
 
-    public Hospital toUpdateHospitalEntity(HospitalRequest hospitalRequest, Hospital hospital) {
+    public Hospital toUpdateHospitalEntity(UpdateHospitalRequest updateHospitalRequest, Hospital hospital) {
 
-        var addressRequest = hospitalRequest.addressRequest();
+        var addressRequest = updateHospitalRequest.addressRequest();
         var address = hospital.getAddress();
         commonMapper.updateAddressEntity(addressRequest, address);
 
-        hospital.setHospitalName(hospitalRequest.hospitalName());
-        hospital.setFoundedAt(hospitalRequest.foundedAt());
+        hospital.setHospitalName(updateHospitalRequest.hospitalName());
+        hospital.setFoundedAt(updateHospitalRequest.foundedAt());
         hospital.setAddress(address);
         return hospital;
     }
