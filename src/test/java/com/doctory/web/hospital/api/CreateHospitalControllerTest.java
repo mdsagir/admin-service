@@ -63,7 +63,6 @@ class CreateHospitalControllerTest {
     void test_create_new_hospital_with_failed_validation_then_return_400_status() throws Exception {
 
 
-        var errors = Map.of("hospitalName", "AK Hospital hospital name already exist");
         var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
         var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
         Hospital hospital = new Hospital();
@@ -75,7 +74,8 @@ class CreateHospitalControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         var contentAsString = mvcResult.getResponse().getContentAsString();
-         assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(errors));
+        var errors = Map.of("hospitalName", hospitalRequest.hospitalName()+" hospital name already exist");
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(errors));
     }
     @Test
     void test_create_new_hospital_with_runtime_exception_then_return_500_status() throws Exception {
@@ -98,8 +98,8 @@ class CreateHospitalControllerTest {
         var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
         var hospitalRequest = new HospitalRequest("AK Hospital", "1989", addressRequest);
         given(hospitalRepo.findByHospitalName(hospitalRequest.hospitalName())).willReturn(Optional.empty());
-        var unableToSaveTheHospital = new SomethingWentWrong("Unable to save the hospital");
-        given(hospitalService.addNewHospital(hospitalRequest)).willThrow(unableToSaveTheHospital);
+        var somethingWentWrong = new SomethingWentWrong("Unable to save the hospital");
+        given(hospitalService.addNewHospital(hospitalRequest)).willThrow(somethingWentWrong);
         var mvcResult = mockMvc.perform(post("/api/hospital")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(hospitalRequest)))
