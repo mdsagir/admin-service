@@ -1,5 +1,6 @@
 package com.doctory.web.hospital.api;
 
+import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.infra.repo.HospitalRepo;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.doctory.domain.ResponseModel.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -54,8 +56,9 @@ class UpdateHospitalControllerTest {
         var contentAsString = mvcResult.getResponse().getContentAsString();
         assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
     }
+
     @Test
-    void test_update_hospital_with_success_failed_property_validation_then_return_200_status() throws Exception {
+    void test_update_hospital_with_failed_property_validation_then_return_400_status() throws Exception {
 
         var error = Map.of("hospitalName", "The hospital name must be defined");
         var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
@@ -70,5 +73,39 @@ class UpdateHospitalControllerTest {
                 .andReturn();
         var contentAsString = mvcResult.getResponse().getContentAsString();
         assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(error));
+    }
+
+    @Test
+    void test_update_hospital_with_runtime_exception_then_return_500_status() throws Exception {
+        ResponseModel responseModel = of("Unable to process the request at this time");
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var updateHospitalRequest = new UpdateHospitalRequest(101L, "AK Hospital", "1989", addressRequest);
+        given(hospitalRepo.findByHospitalName(updateHospitalRequest.hospitalName())).willReturn(Optional.empty());
+        given(hospitalService.updateHospitalInfo(updateHospitalRequest)).willThrow(NullPointerException.class);
+        var mvcResult = mockMvc.perform(put("/api/hospital")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateHospitalRequest)))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+        var contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
+    }
+
+    @Test
+    void test_update_hospital_with_SomethingWentWrong_exception_then_return_400_status() throws Exception {
+        String errorMessage = "Unable to update the hospital";
+        ResponseModel responseModel = of(errorMessage);
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+        var updateHospitalRequest = new UpdateHospitalRequest(101L, "AK Hospital", "1989", addressRequest);
+        given(hospitalRepo.findByHospitalName(updateHospitalRequest.hospitalName())).willReturn(Optional.empty());
+        var somethingWentWrong = new SomethingWentWrong(errorMessage);
+        given(hospitalService.updateHospitalInfo(updateHospitalRequest)).willThrow(somethingWentWrong);
+        var mvcResult = mockMvc.perform(put("/api/hospital")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateHospitalRequest)))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+        var contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
     }
 }

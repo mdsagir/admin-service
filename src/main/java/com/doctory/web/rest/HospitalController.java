@@ -8,6 +8,8 @@ import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.request.UpdateHospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -141,7 +143,7 @@ public class HospitalController {
      *                                               like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("search")
-    public ResponseEntity<List<SearchDto>> getHospitalInfo(@RequestParam String search) {
+    public ResponseEntity<List<SearchDto>> getHospitalInfo(@RequestParam(required = false) @NotBlank(message = "The text must be defined") String search) {
         var hospitalSearch = hospitalService.searchHospital(search);
         return new ResponseEntity<>(hospitalSearch, OK);
     }

@@ -13,7 +13,9 @@ import com.doctory.web.request.UpdateHospitalRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 import static com.doctory.domain.ResponseModel.of;
 import static org.springframework.data.domain.PageRequest.of;
 
@@ -66,8 +68,14 @@ public class HospitalManager implements HospitalService {
 
     @Override
     public List<SearchDto> searchHospital(String hospitalName) {
-        var pageRequest = of(0, 50);
-        return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
+        try {
+            var pageRequest = of(0, 50);
+            return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
+        } catch (Exception exception) {
+            log.error("Error while search hospital {}", exception.toString());
+            throw new SomethingWentWrong("Unable to search the hospital");
+        }
+
     }
 
 
