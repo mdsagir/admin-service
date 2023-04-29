@@ -45,7 +45,8 @@ public class HospitalController {
     /**
      * Binding apply for validation
      *
-     * @param webDataBinder spring boot are apply {@link  WebDataBinder} for request body validation
+     * @param webDataBinder spring boot are apply {@link  WebDataBinder}
+     *                      for request body validation
      */
     @InitBinder
     public void bindValidator(WebDataBinder webDataBinder) {
@@ -61,14 +62,19 @@ public class HospitalController {
     /**
      * {@code POST /api/hospital} API create a new hospital
      * <p>
-     * <p>
-     * Primarily validate all mandatory fields, then checks database unique constraints (given hospital name existence)
-     * after persist {@link HospitalRequest} all property to the database and return with success message with status {@code 201 CREATED}.
+     * Primarily validate all mandatory fields, then checks database
+     * unique constraints <b>given hospital name existence</b> after
+     * persist {@link HospitalRequest} all property to the database
+     * and return with success message with status {@code 201 CREATED}.
      *
-     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
-     * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 201 (Created)}
-     * @throws IllegalArgumentException              in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}.
-     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure ...
+     * @param hospital payload {@link HospitalRequest} Its JSON API request
+     *                 contract send by consumer, It's not be {@literal null}.
+     * @return Response entity {@link ResponseEntity} with {@link ResponseModel}
+     * status {@code 201 (Created)}
+     * @throws IllegalArgumentException              in case the given {@link HospitalRequest requestBody}
+     *                                               of its property is {@literal empty-string} or {@literal null}.
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to
+     *                                               whole application level like database failure ...
      */
     @PostMapping
     public ResponseEntity<ResponseModel> createHospital(@Valid @RequestBody HospitalRequest hospital) {
@@ -81,11 +87,16 @@ public class HospitalController {
      * <p>
      *
      * @param id input request parameter, It's not be {@literal null}.
-     * @return {@link ResponseEntity} with {@link HospitalDto} contain all information of particular hospital with {@code 200} Success
-     * @throws IllegalArgumentException                 in case the given {@literal  id parameter} of its property is {@literal empty-string} or {@literal null}
-     *                                                  then validation exception are triggered and response give the {@code 400 Bad request}
-     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
-     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     * @return {@link ResponseEntity} with {@link HospitalDto} contain all information
+     * of particular hospital with {@code 200} Success
+     * @throws IllegalArgumentException                 in case the given {@literal  id parameter} of its
+     *                                                  property is {@literal empty-string} or {@literal null}
+     *                                                  then validation exception are triggered and response
+     *                                                  give the {@code 400 Bad request}
+     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record
+     *                                                  available and response give the {@code 404 Not found}
+     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like
+     *                                                  database failure and response the {@code 500 Internal server error}
      */
     @GetMapping
     public ResponseEntity<HospitalDto> getHospitalInfo(@RequestParam(required = false) @NotNull(message = "The id must be defined") Long id) {
@@ -96,15 +107,21 @@ public class HospitalController {
     /**
      * {@code PUT api/hospital} update hospital info by id
      * <p>
-     * Finds the existence Hospital by given {@literal  id} and update Hospital data by {@link HospitalRequest}
+     * Finds the existence Hospital by given {@literal  id} and
+     * update Hospital data by {@link HospitalRequest}
      *
-     * @param id       input request parameter, It's not be {@literal null}, that fetch the existing Hospital details
-     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
+     * @param id       input request parameter, It's not be {@literal null},
+     *                 that fetch the existing Hospital details
+     * @param hospital payload {@link HospitalRequest} Its JSON API request contract send by
+     *                 consumer, It's not be {@literal null}.
      * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
-     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property is {@literal empty-string} or {@literal null}
+     * @throws IllegalArgumentException                 in case the given {@link HospitalRequest requestBody} of its property
+     *                                                  is {@literal empty-string} or {@literal null}
      *                                                  and response give the {@code 400 Bad request}
-     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available and response give the {@code 404 Not found}
-     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     * @throws com.doctory.common.DataNotFoundException in case the given invalid {@literal  id} that no record available
+     *                                                  and response give the {@code 404 Not found}
+     * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database
+     *                                                  failure and response the {@code 500 Internal server error}
      */
 
     @PutMapping
@@ -116,10 +133,12 @@ public class HospitalController {
     /**
      * {@code PUT api/hospital/search} search hospital by text
      * <p>
-     * Perform search by given text with {@literal 50} size pagination, if not match any result return empty array
+     * Perform search by given text with {@literal 50} size pagination,
+     * if not match any result return empty array
      *
      * @param search input request parameter, It's not be {@literal null}.
-     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level
+     *                                               like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("search")
     public ResponseEntity<List<SearchDto>> getHospitalInfo(@RequestParam String search) {
@@ -132,12 +151,13 @@ public class HospitalController {
      *
      * @param pageNo   current page no which data are display
      * @param pageSize array page size default is {@literal 10} size
-     * @return {@link ResponseEntity} with {@link List} of {@link HospitalDto} hospital details based on page nation with {@code 200} Success
-     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
+     * @return {@link ResponseEntity} with {@link List} of {@link HospitalDto} hospital details
+     * based on page nation with {@code 200} Success
+     * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level
+     *                                               like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("all")
-    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
-                                                            @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
+    public ResponseEntity<List<HospitalDto>> getAllHospital(@RequestParam(required = false, defaultValue = "0") Integer pageNo, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
         var hospitals = hospitalService.getAllHospital(pageNo, pageSize);
         return new ResponseEntity<>(hospitals, OK);
     }
