@@ -1,5 +1,7 @@
 package com.doctory.web.hospital.api;
 
+import com.doctory.common.SomethingWentWrong;
+import com.doctory.domain.ResponseModel;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.rest.HospitalController;
@@ -49,5 +51,37 @@ class FindAllHospitalControllerTest {
         var contentAsString = mvcResult.getResponse()
                 .getContentAsString();
         assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(hospitalDto));
+    }
+    @Test
+    void test_find_all_hospital_with_runtime_exception_then_return_400_status() throws Exception {
+        ResponseModel responseModel = ResponseModel.of("Unable to process the request at this time");
+        int pageNo = 0;
+        int pageSize = 0;
+        given(hospitalService.getAllHospital(pageNo, pageSize)).willThrow(NullPointerException.class);
+        var mvcResult = mockMvc.perform(get("/api/hospital/all")
+                        .contentType(MediaType.APPLICATION_JSON).
+                        param("pageNo", String.valueOf(pageNo)).
+                        param("pageSize", String.valueOf(pageNo)))
+                .andExpect(status().isInternalServerError()).andReturn();
+        var contentAsString = mvcResult.getResponse()
+                .getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
+    }
+    @Test
+    void test_find_all_hospital_with_something_went_wrong_exception_then_return_400_status() throws Exception {
+        String errorMessage = "Unable to find the hospital";
+        ResponseModel responseModel = ResponseModel.of(errorMessage);
+        var somethingWentWrong = new SomethingWentWrong(errorMessage);
+        int pageNo = 0;
+        int pageSize = 0;
+        given(hospitalService.getAllHospital(pageNo, pageSize)).willThrow(somethingWentWrong);
+        var mvcResult = mockMvc.perform(get("/api/hospital/all")
+                        .contentType(MediaType.APPLICATION_JSON).
+                        param("pageNo", String.valueOf(pageNo)).
+                        param("pageSize", String.valueOf(pageNo)))
+                .andExpect(status().isInternalServerError()).andReturn();
+        var contentAsString = mvcResult.getResponse()
+                .getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
     }
 }
