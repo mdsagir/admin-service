@@ -9,7 +9,6 @@ import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +31,7 @@ import java.util.List;
  * operation
  */
 
-@Validated
+
 @RestController
 @RequestMapping("/api/hospital")
 public class HospitalController {
