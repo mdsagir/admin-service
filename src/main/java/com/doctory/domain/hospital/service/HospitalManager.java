@@ -81,10 +81,16 @@ public class HospitalManager implements HospitalService {
 
     @Override
     public List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
-        var page = pageSize == 0 ? 10 : pageSize;
-        var pageRequest = of(pageNo, page);
-        var allHospital = hospitalRepo.getAllHospital(pageRequest);
-        return allHospital.getContent();
+        try {
+
+            var page = pageSize == 0 ? 10 : pageSize;
+            var pageRequest = of(pageNo, page);
+            var allHospital = hospitalRepo.getAllHospital(pageRequest);
+            return allHospital.getContent();
+        } catch (Exception exception) {
+            log.error("Error while find hospital {}", exception.toString());
+            throw new SomethingWentWrong("Unable to find the hospital");
+        }
     }
 
     /**

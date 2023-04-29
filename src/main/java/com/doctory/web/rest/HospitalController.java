@@ -1,32 +1,24 @@
 package com.doctory.web.rest;
 
 import com.doctory.domain.ResponseModel;
-import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.SearchDto;
+import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.hospital.service.HospitalService;
 import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.request.UpdateHospitalRequest;
 import com.doctory.web.validator.AddHospitalValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.CREATED;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * <p>
@@ -115,7 +107,7 @@ public class HospitalController {
      * update Hospital data by {@link HospitalRequest}
      *
      * @param updateHospitalRequest payload {@link UpdateHospitalRequest} Its JSON API request contract send by
-     *                 consumer, It's not be {@literal null}.
+     *                              consumer, It's not be {@literal null}.
      * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
      * @throws IllegalArgumentException                 in case the given {@link UpdateHospitalRequest requestBody} of its property
      *                                                  is {@literal empty-string} or {@literal null}
