@@ -49,6 +49,15 @@ class UpdateHospitalRequestValidationTest {
         assertThat(validate).hasSize(1);
         assertThat(equals).isEqualTo(Boolean.TRUE);
     }
+    @Test
+    void when_id_field_define_null_then_validation_failed() {
+        var updateHospitalRequest = new UpdateHospitalRequest(null,"AK Hospital", "1989", addressRequest);
+        Set<ConstraintViolation<UpdateHospitalRequest>> validate = validator.validate(updateHospitalRequest);
+        assertThat(validate).hasSize(1);
+        boolean equals = validate.iterator().next().getMessage().equals("The hospital id must be defined");
+        assertThat(validate).hasSize(1);
+        assertThat(equals).isEqualTo(Boolean.TRUE);
+    }
 
     @NullSource
     @ParameterizedTest
