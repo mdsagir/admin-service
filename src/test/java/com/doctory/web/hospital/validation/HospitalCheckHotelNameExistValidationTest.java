@@ -21,7 +21,7 @@ import java.util.Optional;
 
 
 @SpringBootTest
-class HotelCheckHotelNameExistValidationTest {
+class HospitalCheckHotelNameExistValidationTest {
 
     @Autowired
     private AddHospitalValidator addHospitalValidator;

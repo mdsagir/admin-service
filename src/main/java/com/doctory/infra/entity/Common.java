@@ -10,6 +10,24 @@ public class Common {
     private LocalDateTime createdDate;
     private Long modifiedBy;
     private LocalDateTime modifiedDate;
+    private Boolean status;
+    private Boolean flag;
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
     public Long getCreatedBy() {
         return createdBy;

@@ -16,7 +16,7 @@ import java.util.Set;
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HospitalRequestValidationTest {
+class AddHospitalRequestValidationTest {
 
     private static Validator validator;
     private static AddressRequest addressRequest;

@@ -32,6 +32,8 @@ public class CommonMapper {
         common.setModifiedBy(1L);
         common.setCreatedDate(localDateTime);
         common.setModifiedDate(localDateTime);
+        common.setFlag(true);
+        common.setStatus(true);
         return common;
     }
 
