@@ -11,9 +11,10 @@ import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.HospitalRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import static com.doctory.domain.ResponseModel.of;
+import static org.springframework.data.domain.PageRequest.of;
 
 @Service
 public class HospitalManager implements HospitalService {
@@ -34,7 +35,7 @@ public class HospitalManager implements HospitalService {
             var hospital = hospitalMapper.toHospitalEntity(hospitalRequest);
             hospitalRepo.save(hospital);
             log.info("Hospital name is saved {}", hospitalName);
-            return ResponseModel.of("Hospital added successfully");
+            return of("Hospital added successfully");
         } catch (Exception exception) {
             log.error("Error while adding new hospital {}", exception.toString());
             throw new SomethingWentWrong("Unable to save the hospital");
@@ -54,7 +55,7 @@ public class HospitalManager implements HospitalService {
             var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(hospitalRequest, hospital);
             hospitalRepo.save(hospitalEntity);
             log.info("Update successfully hostel info for given id {}", id);
-            return ResponseModel.of("Hospital updated successfully");
+            return of("Hospital updated successfully");
         } catch (Exception exception) {
             log.error("Error while updating hospital {}", exception.toString());
             throw new SomethingWentWrong("Unable to update the hospital");
@@ -63,7 +64,7 @@ public class HospitalManager implements HospitalService {
 
     @Override
     public List<SearchDto> searchHospital(String hospitalName) {
-        var pageRequest = PageRequest.of(0, 50);
+        var pageRequest = of(0, 50);
         return hospitalRepo.searchByHospitalNameContaining(hospitalName, pageRequest);
     }
 
@@ -71,7 +72,7 @@ public class HospitalManager implements HospitalService {
     @Override
     public List<HospitalDto> getAllHospital(Integer pageNo, Integer pageSize) {
         var page = pageSize == 0 ? 10 : pageSize;
-        var pageRequest = PageRequest.of(pageNo, page);
+        var pageRequest = of(pageNo, page);
         var allHospital = hospitalRepo.getAllHospital(pageRequest);
         return allHospital.getContent();
     }

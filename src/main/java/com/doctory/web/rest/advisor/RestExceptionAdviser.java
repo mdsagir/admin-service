@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.doctory.domain.ResponseModel.of;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -21,21 +22,22 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RestControllerAdvice
 public class RestExceptionAdviser {
 
-    @ResponseStatus(BAD_REQUEST)
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseModel handleValidationExceptions(RuntimeException exception) {
-        return ResponseModel.of(exception.getMessage());
+    public ResponseEntity<ResponseModel> handleValidationExceptions() {
+        ResponseModel responseModel = of("Unable to process the request at this time");
+        return new ResponseEntity<>(responseModel, INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<ResponseModel> handleDataNotFoundException(DataNotFoundException dataNotFoundException) {
-        ResponseModel responseModel = ResponseModel.of(dataNotFoundException.getMessage());
+        ResponseModel responseModel = of(dataNotFoundException.getMessage());
         return new ResponseEntity<>(responseModel, NOT_FOUND);
     }
 
     @ExceptionHandler(SomethingWentWrong.class)
     public ResponseEntity<ResponseModel> handleSomethingWentWring(SomethingWentWrong somethingWentWrong) {
-        ResponseModel responseModel = ResponseModel.of(somethingWentWrong.getMessage());
+        ResponseModel responseModel = of(somethingWentWrong.getMessage());
         return new ResponseEntity<>(responseModel, INTERNAL_SERVER_ERROR);
     }
 
