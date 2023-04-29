@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static com.doctory.domain.ResponseModel.of;
 import static com.doctory.domain.hospital.dto.HospitalDto.of;
@@ -52,6 +53,7 @@ class GetHospitalControllerTest {
 
     @Test
     void test_find_hospital_info_by_id_validation_failed_with_error_response_status_400() throws Exception {
+        var error = Map.of("error", "The id must be defined");
 
         Long id = 100L;
         var hospitalDto = of(id, "AK Hospital", "1989", "addressLine1", "addressLine2", "854633", "Bihar", "India", LocalDateTime.now(), LocalDateTime.now());
@@ -60,7 +62,7 @@ class GetHospitalControllerTest {
         var mvcResult = mockMvc.perform(get("/api/hospital").contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest()).andReturn();
         var jsonResponse = mvcResult.getResponse().getContentAsString();
-        assertThat(jsonResponse).isEqualTo(objectMapper.writeValueAsString(hospitalDto));
+        assertThat(jsonResponse).isEqualTo(objectMapper.writeValueAsString(error));
 
     }
 
