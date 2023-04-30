@@ -11,4 +11,7 @@ public record HospitalRequest(
         @Valid
         AddressRequest addressRequest
 ) {
+        public HospitalRequest() {
+                this(null,null,null);
+        }
 }
