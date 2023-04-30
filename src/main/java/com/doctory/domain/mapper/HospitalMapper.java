@@ -7,6 +7,8 @@ import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.request.UpdateHospitalRequest;
 import org.springframework.stereotype.Component;
 
+import static com.doctory.domain.hospital.dto.HospitalDto.of;
+
 
 @Component
 public class HospitalMapper {
@@ -33,7 +35,7 @@ public class HospitalMapper {
     }
 
     public HospitalDto toHospitalDto(Hospital hospital) {
-        return HospitalDto.of(hospital);
+        return of(hospital);
     }
 
     public Hospital toUpdateHospitalEntity(UpdateHospitalRequest updateHospitalRequest, Hospital hospital) {
