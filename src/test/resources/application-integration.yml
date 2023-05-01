@@ -1,0 +1,3 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:5.7.34:///
