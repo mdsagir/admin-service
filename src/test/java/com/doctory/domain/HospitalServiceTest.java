@@ -193,4 +193,36 @@ class HospitalServiceTest {
                 .isInstanceOf(SomethingWentWrong.class)
                 .hasMessage("Unable to find the hospital");
     }
+
+    /*
+    ========================
+    SEARCH DOCTOR TEST CASE
+    ========================
+     */
+
+    @Test
+    void when_search_hospital_then_return_success() {
+
+        int page = 0, pageSize = 50;
+        String search = "ho";
+
+        var hospitalSearchDto = List.of(new SearchDto(1L, "Hospital"));
+        var pageRequest = PageRequest.of(page, pageSize);
+        when(hospitalRepo.searchByHospitalNameContaining(search, pageRequest)).thenReturn(hospitalSearchDto);
+        var searchDtoList = hospitalManager.searchHospital(search);
+        assertThat(searchDtoList).isEqualTo(hospitalSearchDto);
+    }
+
+    @Test
+    void when_search_hospital_then_return_exception() {
+
+        int page = 0, pageSize = 50;
+        String search = "ho";
+
+        var pageRequest = PageRequest.of(page, pageSize);
+        when(hospitalRepo.searchByHospitalNameContaining(search, pageRequest)).thenThrow(NullPointerException.class);
+        assertThatThrownBy(() -> hospitalManager.searchHospital(search))
+                .isInstanceOf(SomethingWentWrong.class)
+                .hasMessage("Unable to search the hospital");
+    }
 }
