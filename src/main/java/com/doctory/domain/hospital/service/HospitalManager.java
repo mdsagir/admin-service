@@ -53,9 +53,9 @@ public class HospitalManager implements HospitalService {
 
     @Override
     public ResponseModel updateHospitalInfo(UpdateHospitalRequest updateHospitalRequest) {
+        var id = updateHospitalRequest.id();
+        var hospital = findById(id);
         try {
-            var id = updateHospitalRequest.id();
-            var hospital = findById(id);
             var hospitalEntity = hospitalMapper.toUpdateHospitalEntity(updateHospitalRequest, hospital);
             hospitalRepo.save(hospitalEntity);
             log.info("Update successfully hostel info for given id {}", id);
