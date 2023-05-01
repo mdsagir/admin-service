@@ -2,7 +2,6 @@ package com.doctory.domain;
 
 import com.doctory.common.DataNotFoundException;
 import com.doctory.common.SomethingWentWrong;
-import com.doctory.domain.hospital.dto.HospitalDto;
 import com.doctory.domain.hospital.service.HospitalManager;
 import com.doctory.domain.mapper.CommonMapper;
 import com.doctory.domain.mapper.HospitalMapper;
@@ -17,11 +16,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.doctory.domain.ResponseModel.of;
+import static com.doctory.domain.hospital.dto.HospitalDto.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -90,7 +93,7 @@ class HospitalServiceTest {
         Hospital hospital = new Hospital();
         hospital.setHospitalName("AK hospital");
         hospital.setFoundedAt("1998");
-        var hospitalDto = HospitalDto.of(id, "AK Hospital", "1989",
+        var hospitalDto = of(id, "AK Hospital", "1989",
                 "addressLine1", "addressLine2", "854633",
                 "Bihar", "India", LocalDateTime.now(), LocalDateTime.now());
         when(hospitalRepo.getHospitalById(id)).thenReturn(Optional.of(hospital));
@@ -143,6 +146,7 @@ class HospitalServiceTest {
                 .hasMessage(id + " is not found");
 
     }
+
     @Test
     void when_update_hospital_info_then_runtime_exception() {
         var expected = of("Hospital updated successfully");
@@ -157,5 +161,36 @@ class HospitalServiceTest {
         when(hospitalMapper.toUpdateHospitalEntity(updateHospitalRequest, hospital)).thenReturn(hospital);
         var responseModel = hospitalManager.updateHospitalInfo(updateHospitalRequest);
         assertThat(responseModel).isEqualTo(expected);
+    }
+    /*
+        =========================================
+        FIND ALL DOCTOR'S
+        =========================================
+     */
+
+    @Test
+    void when_get_all_the_hospital_then_return_success() {
+
+        int page = 0, pageSize = 1;
+
+        var hospitalDtoList = List.of(of(10L, "AK Hospital", "1989",
+                "addressLine1", "addressLine2", "854633",
+                "Bihar", "India", LocalDateTime.now(), LocalDateTime.now()));
+        var pageRequest = PageRequest.of(page, pageSize);
+        var hospitalDtoPage = new PageImpl<>(hospitalDtoList);
+        when(hospitalRepo.getAllHospital(pageRequest)).thenReturn(hospitalDtoPage);
+        var allHospital = hospitalManager.getAllHospital(page, pageSize);
+        assertThat(hospitalDtoList).isEqualTo(allHospital);
+    }
+
+    @Test
+    void when_get_all_the_hospital_then_return_exception() {
+
+        int page = 0, pageSize = 1;
+        var pageRequest = PageRequest.of(page, pageSize);
+        when(hospitalRepo.getAllHospital(pageRequest)).thenThrow(NullPointerException.class);
+        assertThatThrownBy(() -> hospitalManager.getAllHospital(page, pageSize))
+                .isInstanceOf(SomethingWentWrong.class)
+                .hasMessage("Unable to find the hospital");
     }
 }
