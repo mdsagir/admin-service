@@ -33,7 +33,7 @@ class HospitalCheckHotelNameExistValidationTest {
         var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
 
         var hospitalRequest = new HospitalRequest("AJ Hospital", "1989", addressRequest);
-        Hospital hospital = new Hospital();
+        var hospital = new Hospital();
         hospital.setHospitalName("AJ Hospital");
         given(hospitalRepo.findByHospitalName(hospitalRequest.hospitalName())).willReturn(Optional.of(hospital));
         Errors errors = new BeanPropertyBindingResult(hospitalRequest, "");
