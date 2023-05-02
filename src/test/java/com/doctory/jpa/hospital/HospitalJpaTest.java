@@ -28,7 +28,7 @@ class HospitalJpaTest {
 
 
     @Test
-    void when_update() {
+    void when_save_and_update_doctor_then_return_success() {
 
         var address = new Address("addressLine1", "addressLine2", "state",
                 "country", "pinCode");
