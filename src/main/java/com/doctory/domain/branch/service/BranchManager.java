@@ -60,9 +60,9 @@ public class BranchManager implements BranchService {
 
     @Override
     public ResponseModel updateBranch(UpdateBranchRequest updateBranchRequest) {
+        var branchId = updateBranchRequest.branchId();
+        var branch = findById(branchId);
         try {
-            var branchId = updateBranchRequest.branchId();
-            var branch = findById(branchId);
             branchMapper.toUpdateBranchEntity(updateBranchRequest, branch);
             branchRepo.save(branch);
             log.info("Branch is updated {}", branch.getId());
@@ -75,15 +75,25 @@ public class BranchManager implements BranchService {
 
     @Override
     public List<SearchDto> searchBranch(String searchText) {
-        var pageRequest = PageRequest.of(0, 50);
-        return branchRepo.searchByBranchNameContaining(searchText, pageRequest);
+        try {
+            var pageRequest = PageRequest.of(0, 50);
+            return branchRepo.searchByBranchNameContaining(searchText, pageRequest);
+        } catch (Exception exception) {
+            log.error("Error while search hospital {}", exception.toString());
+            throw new SomethingWentWrong("Unable to search the branch");
+        }
     }
 
     @Override
     public List<BranchDto> getAllBranch(Integer pageNo, Integer pageSize) {
-        var page = pageSize == 0 ? 10 : pageSize;
-        var pageRequest = PageRequest.of(pageNo, page);
-        return branchRepo.getAllBranch(pageRequest).getContent();
+        try {
+            var page = pageSize == 0 ? 10 : pageSize;
+            var pageRequest = PageRequest.of(pageNo, page);
+            return branchRepo.getAllBranch(pageRequest).getContent();
+        } catch (Exception exception) {
+            log.error("Error while getting all branch {}", exception.toString());
+            throw new SomethingWentWrong("Unable to get the branch");
+        }
     }
 
     private Branch findById(Long id) {
