@@ -4,6 +4,7 @@ import com.doctory.infra.entity.Branch;
 import com.doctory.infra.repo.BranchRepo;
 import com.doctory.web.request.AddressRequest;
 import com.doctory.web.request.BranchRequest;
+import com.doctory.web.request.HospitalRequest;
 import com.doctory.web.validator.AddBranchValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,16 @@ class BranchNameExistenceValidationTest {
         assertThat(fieldError).isNotNull();
         var errorMessage = errors.getFieldError().getDefaultMessage();
         assertThat(errorMessage).isEqualTo(branchName + " branch name already exist");
+    }
+
+    @Test
+    void when_branch_name_not_exist_then_validation_success() {
+        var addressRequest = new AddressRequest("Address1", "Address2", "898765", "Bihar", "India");
+
+        var branchRequest = new BranchRequest(1L,"Port luis",  addressRequest);
+        given(branchRepo.findByBranchName(branchRequest.branchName())).willReturn(Optional.empty());
+        Errors errors = new BeanPropertyBindingResult(branchRequest, "");
+        addBranchValidator.validate(branchRequest, errors);
+        assertThat(errors.hasErrors()).isFalse();
     }
 }
