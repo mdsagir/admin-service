@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(HospitalController.class)
 @Import(AddHospitalValidator.class)
 @MockBean(HospitalRepo.class)
-class FindAllHospitalControllerTest {
+class FindAllHospitalAPITest {
 
     @Autowired
     private MockMvc mockMvc;

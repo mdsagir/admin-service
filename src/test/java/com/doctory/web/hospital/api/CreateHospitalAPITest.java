@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HospitalController.class)
 @Import(AddHospitalValidator.class)
-class CreateHospitalControllerTest {
+class CreateHospitalAPITest {
 
 
     @MockBean
