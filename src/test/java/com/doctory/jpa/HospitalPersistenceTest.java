@@ -1,4 +1,4 @@
-package com.doctory.jpa.hospital;
+package com.doctory.jpa;
 
 import com.doctory.config.DataConfig;
 import com.doctory.infra.entity.Address;
@@ -19,7 +19,7 @@ import static org.springframework.data.domain.PageRequest.of;
 @Import(DataConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("integration")
-class HospitalJpaTest {
+class HospitalPersistenceTest {
 
 
     @Autowired
