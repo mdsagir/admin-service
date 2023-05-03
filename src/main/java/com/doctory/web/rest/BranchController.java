@@ -5,8 +5,10 @@ import com.doctory.domain.SearchDto;
 import com.doctory.domain.branch.dto.BranchDto;
 import com.doctory.domain.branch.service.BranchService;
 import com.doctory.web.request.BranchRequest;
+import com.doctory.web.request.UpdateBranchRequest;
 import com.doctory.web.validator.AddBranchValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -87,8 +89,7 @@ public class BranchController {
      * <p>
      * Finds the existence Branch by given {@literal  id} and update Branch data by {@link BranchRequest}
      *
-     * @param id       input request parameter, It's not be {@literal null}, that fetch the existing Branch details
-     * @param branchRequest payload {@link BranchRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
+     * @param updateBranchRequest payload {@link BranchRequest} Its JSON API request contract send by consumer, It's not be {@literal null}.
      * @return Response entity {@link ResponseEntity} with {@link ResponseModel} status {@code 200 (SUCCESS)}
      * @throws IllegalArgumentException                 in case the given {@link BranchRequest requestBody} of its property is {@literal empty-string} or {@literal null}
      *                                                  and response give the {@code 400 Bad request}
@@ -96,8 +97,8 @@ public class BranchController {
      * @throws com.doctory.common.SomethingWentWrong    when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @PutMapping
-    public ResponseEntity<ResponseModel> updateBranchInfo(@RequestParam Long id, @Valid @RequestBody BranchRequest branchRequest) {
-        var responseModel = branchService.updateBranch(id, branchRequest);
+    public ResponseEntity<ResponseModel> updateBranchInfo(@Valid @RequestBody UpdateBranchRequest updateBranchRequest) {
+        var responseModel = branchService.updateBranch(updateBranchRequest);
         return new ResponseEntity<>(responseModel, OK);
     }
 
@@ -110,7 +111,7 @@ public class BranchController {
      * @throws com.doctory.common.SomethingWentWrong when anything went wrong to whole application level like database failure and response the {@code 500 Internal server error}
      */
     @GetMapping("search")
-    public ResponseEntity<List<SearchDto>> getBranchInfo(@RequestParam String search) {
+    public ResponseEntity<List<SearchDto>> getBranchInfo(@RequestParam(required = false) @NotBlank(message = "The text must be defined") String search) {
         var searchBranch = branchService.searchBranch(search);
         return new ResponseEntity<>(searchBranch, OK);
     }

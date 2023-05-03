@@ -2,6 +2,7 @@ package com.doctory.domain.mapper;
 
 import com.doctory.infra.entity.Branch;
 import com.doctory.web.request.BranchRequest;
+import com.doctory.web.request.UpdateBranchRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,11 +28,11 @@ public class BranchMapper {
         return branch;
     }
 
-    public void toUpdateBranchEntity(BranchRequest branchRequest, Branch branch) {
-        var addressRequest = branchRequest.addressRequest();
+    public void toUpdateBranchEntity(UpdateBranchRequest updateBranchRequest, Branch branch) {
+        var addressRequest = updateBranchRequest.addressRequest();
         var address = branch.getAddress();
         commonMapper.updateAddressEntity(addressRequest,address);
-        branch.setBranchName(branchRequest.branchName());
+        branch.setBranchName(updateBranchRequest.branchName());
 
 
     }

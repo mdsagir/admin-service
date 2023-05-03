@@ -3,10 +3,10 @@ package com.doctory.web.branch.api;
 import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.SearchDto;
-import com.doctory.domain.hospital.service.HospitalService;
-import com.doctory.infra.repo.HospitalRepo;
-import com.doctory.web.rest.HospitalController;
-import com.doctory.web.validator.AddHospitalValidator;
+import com.doctory.domain.branch.service.BranchService;
+import com.doctory.infra.repo.BranchRepo;
+import com.doctory.web.rest.BranchController;
+import com.doctory.web.validator.AddBranchValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,25 +28,26 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HospitalController.class)
-@Import(AddHospitalValidator.class)
-@MockBean(HospitalRepo.class)
-class SearchHospitalAPITest {
+@WebMvcTest(BranchController.class)
+@Import(AddBranchValidator.class)
+@MockBean(BranchRepo.class)
+class SearchBranchAPITest {
 
+    private final String URL = "/api/branch/search";
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private HospitalService hospitalService;
+    private BranchService branchService;
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    void test_search_hospital_with_success_validation_then_return_200_status() throws Exception {
+    void when_search_branch_with_success_validation_then_return_200_status() throws Exception {
 
         String search = "hospital";
-        var searchDtoList = List.of(new SearchDto(1L, "AK Hospital"));
-        given(hospitalService.searchHospital(search)).willReturn(searchDtoList);
-        var mvcResult = mockMvc.perform(get("/api/hospital/search")
+        var searchDtoList = List.of(new SearchDto(1L, "Port luise"));
+        given(branchService.searchBranch(search)).willReturn(searchDtoList);
+        var mvcResult = mockMvc.perform(get(URL)
                         .contentType(MediaType.APPLICATION_JSON).param("search", search))
                 .andExpect(status().isOk()).andReturn();
         var contentAsString = mvcResult.getResponse()
@@ -57,11 +58,11 @@ class SearchHospitalAPITest {
     @NullSource
     @ParameterizedTest
     @ValueSource(strings = {"", "  "})
-    void test_search_hospital_with_failed_validation_then_return_400_status(String search) throws Exception {
+    void when_search_branch_with_failed_validation_then_return_400_status(String search) throws Exception {
 
         var error = Map.of("error", "The text must be defined");
 
-        var mvcResult = mockMvc.perform(get("/api/hospital/search")
+        var mvcResult = mockMvc.perform(get(URL)
                         .contentType(MediaType.APPLICATION_JSON).param("search", search))
                 .andExpect(status().isBadRequest()).andReturn();
         var contentAsString = mvcResult.getResponse()
@@ -70,11 +71,11 @@ class SearchHospitalAPITest {
     }
 
     @Test
-    void test_search_hospital_with_runtime_exception_then_return_500_status() throws Exception {
+    void when_search_branch_with_runtime_exception_then_return_500_status() throws Exception {
         ResponseModel responseModel = of("Unable to process the request at this time");
         String search = "hospital";
-        given(hospitalService.searchHospital(search)).willThrow(NullPointerException.class);
-        var mvcResult = mockMvc.perform(get("/api/hospital/search")
+        given(branchService.searchBranch(search)).willThrow(NullPointerException.class);
+        var mvcResult = mockMvc.perform(get(URL)
                         .contentType(MediaType.APPLICATION_JSON).param("search", search))
                 .andExpect(status().isInternalServerError()).andReturn();
         var contentAsString = mvcResult.getResponse()
@@ -83,14 +84,14 @@ class SearchHospitalAPITest {
     }
 
     @Test
-    void test_search_hospital_with_something_went_wrong_exception_then_return_500_status() throws Exception {
-        String errorMessage = "Unable to search the hospital";
+    void when_search_branch_with_something_went_wrong_exception_then_return_500_status() throws Exception {
+        String errorMessage = "Unable to search the branch";
         ResponseModel responseModel = of(errorMessage);
 
         var somethingWentWrong = new SomethingWentWrong(errorMessage);
         String search = "hospital";
-        given(hospitalService.searchHospital(search)).willThrow(somethingWentWrong);
-        var mvcResult = mockMvc.perform(get("/api/hospital/search")
+        given(branchService.searchBranch(search)).willThrow(somethingWentWrong);
+        var mvcResult = mockMvc.perform(get(URL)
                         .contentType(MediaType.APPLICATION_JSON).param("search", search))
                 .andExpect(status().isInternalServerError()).andReturn();
         var contentAsString = mvcResult.getResponse()

@@ -10,6 +10,7 @@ import com.doctory.infra.entity.Branch;
 import com.doctory.infra.repo.BranchRepo;
 import com.doctory.infra.repo.HospitalRepo;
 import com.doctory.web.request.BranchRequest;
+import com.doctory.web.request.UpdateBranchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -58,10 +59,11 @@ public class BranchManager implements BranchService {
     }
 
     @Override
-    public ResponseModel updateBranch(Long id, BranchRequest branchRequest) {
+    public ResponseModel updateBranch(UpdateBranchRequest updateBranchRequest) {
         try {
-            var branch = findById(id);
-            branchMapper.toUpdateBranchEntity(branchRequest, branch);
+            var branchId = updateBranchRequest.branchId();
+            var branch = findById(branchId);
+            branchMapper.toUpdateBranchEntity(updateBranchRequest, branch);
             branchRepo.save(branch);
             log.info("Branch is updated {}", branch.getId());
             return ResponseModel.of("Branch updated successfully");

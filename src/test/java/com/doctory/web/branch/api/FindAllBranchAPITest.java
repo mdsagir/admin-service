@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BranchController.class)
 @Import(AddBranchValidator.class)
 @MockBean(BranchRepo.class)
-class FindAllHospitalAPITest {
+class FindAllBranchAPITest {
 
     @Autowired
     private MockMvc mockMvc;
