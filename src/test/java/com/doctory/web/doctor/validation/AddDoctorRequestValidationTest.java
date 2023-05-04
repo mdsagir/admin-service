@@ -62,7 +62,7 @@ class AddDoctorRequestValidationTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "  "})
     void when_doctor_degree_field_define_empty_or_null_then_validation_failed(String doctorDegree) {
-        var doctorRequest = new DoctorRequest(1L, "A", doctorDegree, "surgeon",  addressRequest, personRequest);
+        var doctorRequest = new DoctorRequest(1L, doctorDegree, "P", "surgeon",  addressRequest, personRequest);
         Set<ConstraintViolation<DoctorRequest>> validate = validator.validate(doctorRequest);
         assertThat(validate).hasSize(1);
         boolean equals = validate.iterator().next().getMessage().equals("The doctor degree must be defined");
@@ -74,7 +74,7 @@ class AddDoctorRequestValidationTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "  "})
     void when_doctor_practice_field_define_empty_or_null_then_validation_failed(String practiceName) {
-        var doctorRequest = new DoctorRequest(1L, "A", "D", practiceName, addressRequest, personRequest);
+        var doctorRequest = new DoctorRequest(1L, "A", practiceName, "S", addressRequest, personRequest);
         Set<ConstraintViolation<DoctorRequest>> validate = validator.validate(doctorRequest);
         assertThat(validate).hasSize(1);
         boolean equals = validate.iterator().next().getMessage().equals("The doctor practice must be defined");
