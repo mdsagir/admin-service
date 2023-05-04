@@ -1,5 +1,6 @@
 package com.doctory.web.doctor.api;
 
+import com.doctory.common.SomethingWentWrong;
 import com.doctory.domain.ResponseModel;
 import com.doctory.domain.doctor.service.DoctorService;
 import com.doctory.infra.entity.Doctor;
@@ -70,7 +71,7 @@ class CreateDoctorAPITest {
 
 
         var personRequest = of("AA", "BB", "CC", "908979780", "2343214532", "aa@gmail.com");
-        var addressRequest =  of("Address1", "Address2", "898765", "Bihar", "India");
+        var addressRequest = of("Address1", "Address2", "898765", "Bihar", "India");
         var doctorRequest = of(1L, "D", "surgeon", "heart", addressRequest, personRequest);
 
         var doctor = new Doctor();
@@ -87,5 +88,43 @@ class CreateDoctorAPITest {
         var contentAsString = mvcResult.getResponse().getContentAsString();
         var errors = Map.of("personRequest.firstName", doctor.getPerson().getFirstName() + " doctor name already exist");
         assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(errors));
+    }
+
+    @Test
+    void when_create_new_doctor_with_runtime_exception_then_return_500_status() throws Exception {
+        ResponseModel responseModel = ResponseModel.of("Unable to process the request at this time");
+        var personRequest = of("AA", "BB", "CC", "908979780", "2343214532", "aa@gmail.com");
+        var addressRequest = of("Address1", "Address2", "898765", "Bihar", "India");
+        var doctorRequest = of(1L, "D", "surgeon", "heart", addressRequest, personRequest);
+
+        given(doctorRepo.findByPerson_FirstName("A")).willReturn(Optional.empty());
+        given(doctorService.addNewDoctor(doctorRequest)).willThrow(NullPointerException.class);
+        var mvcResult = mockMvc.perform(post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(doctorRequest)))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+        var contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
+    }
+
+    @Test
+    void when_create_new_doctor_with_something_went_wrong_exception_then_return_400_status() throws Exception {
+        String errorMessage = "Unable to save the doctor";
+        ResponseModel responseModel = ResponseModel.of(errorMessage);
+        var personRequest = of("AA", "BB", "CC", "908979780", "2343214532", "aa@gmail.com");
+        var addressRequest = of("Address1", "Address2", "898765", "Bihar", "India");
+        var doctorRequest = of(1L, "D", "surgeon", "heart", addressRequest, personRequest);
+
+        given(doctorRepo.findByPerson_FirstName("A")).willReturn(Optional.empty());
+        var somethingWentWrong = new SomethingWentWrong(errorMessage);
+        given(doctorService.addNewDoctor(doctorRequest)).willThrow(somethingWentWrong);
+        var mvcResult = mockMvc.perform(post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(doctorRequest)))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+        var contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString).isEqualTo(objectMapper.writeValueAsString(responseModel));
     }
 }
