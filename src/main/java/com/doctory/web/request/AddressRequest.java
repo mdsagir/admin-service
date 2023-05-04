@@ -11,4 +11,7 @@ public record AddressRequest(@NotBlank(message = "The address must be defined")
                              String state,
                              @NotBlank(message = "The country must be defined")
                              String country) {
+    public static AddressRequest of(String address1, String address2, String pinCode, String state, String country) {
+        return new AddressRequest(address1,address2,pinCode,state,country);
+    }
 }

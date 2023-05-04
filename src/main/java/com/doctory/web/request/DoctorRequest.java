@@ -20,4 +20,8 @@ public record DoctorRequest(
         @Valid
         PersonRequest personRequest
 ) {
+    public static DoctorRequest of(long branchId, String doctorDegree, String practiceName, String specialist, AddressRequest addressRequest, PersonRequest personRequest) {
+
+        return new DoctorRequest(branchId, doctorDegree, practiceName, specialist, addressRequest, personRequest);
+    }
 }
