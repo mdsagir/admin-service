@@ -24,9 +24,9 @@ public class AddDoctorValidation implements Validator {
     @Override
     public void validate(@NonNull Object target,@NonNull Errors errors) {
         var doctorRequest = (DoctorRequest) target;
-        var doctorName = doctorRequest.doctorName();
+        var doctorName = doctorRequest.personRequest().firstName();
         var doctorOptional = doctorRepo.findByPerson_FirstName(doctorName);
-        doctorOptional.ifPresent(doctor -> errors.rejectValue("doctorName", "doctorName.already", doctor.getPerson().getFirstName() + " doctor name already exist"));
+        doctorOptional.ifPresent(doctor -> errors.rejectValue("personRequest.firstName", "doctorName.already", doctor.getPerson().getFirstName() + " doctor name already exist"));
 
     }
 }

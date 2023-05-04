@@ -36,7 +36,7 @@ public class DoctorManager implements DoctorService {
 
     @Override
     public ResponseModel addNewDoctor(DoctorRequest doctorRequest) {
-        var doctorName = doctorRequest.doctorName();
+        var doctorName = doctorRequest.personRequest().firstName();
         try {
             var doctorEntity = doctorMapper.toDoctorEntity(doctorRequest);
             doctorRepo.save(doctorEntity);
