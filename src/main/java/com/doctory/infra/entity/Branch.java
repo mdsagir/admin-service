@@ -2,6 +2,9 @@ package com.doctory.infra.entity;
 
 import jakarta.persistence.*;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 public class Branch {
 
@@ -10,10 +13,10 @@ public class Branch {
     private Long id;
     private String branchName;
     @JoinColumn(name = "address_id")
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade = ALL,fetch = LAZY)
     private Address address;
     @JoinColumn(name = "hospital_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private Hospital hospital;
     @Embedded
     private Common common;

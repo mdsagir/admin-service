@@ -7,6 +7,7 @@ import com.doctory.infra.entity.Common;
 import com.doctory.infra.entity.Hospital;
 import com.doctory.infra.repo.BranchRepo;
 import com.doctory.infra.repo.HospitalRepo;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,11 +31,38 @@ class BranchPersistenceTest {
     @Autowired
     private BranchRepo branchRepo;
 
+    private static Hospital hospital;
+    private static Branch branch;
+
+
+    @BeforeAll
+    static void beforeEach() {
+
+        var address = new Address("addressLine1", "addressLine2", "state",
+                "country", "pinCode");
+        var common = new Common();
+        common.setCreatedBy(1L);
+        common.setModifiedBy(1L);
+        common.setCreatedDate(now());
+        common.setModifiedDate(now());
+        common.setFlag(true);
+        common.setStatus(true);
+
+        hospital = new Hospital();
+        hospital.setId(1L);
+        hospital.setHospitalName("AA");
+        hospital.setCommon(common);
+        hospital.setAddress(address);
+        hospital.setFoundedAt("1998");
+
+    }
+
     @Test
     void when_save_and_update_branch_then_return_success() {
-
-        var branch = newBranch();
-        branchRepo.save(branch);
+        var savedHospital = hospitalRepo.save(hospital);
+        branch = newBranch();
+        branch.setHospital(savedHospital);
+        branch = branchRepo.save(branch);
         var all = hospitalRepo.findAll();
         assertThat(all).hasSize(1);
 
@@ -43,8 +71,10 @@ class BranchPersistenceTest {
 
     @Test
     void when_find_branch_by_id_then_return_success() {
-        var branch = newBranch();
-        branchRepo.save(branch);
+        var savedHospital = hospitalRepo.save(hospital);
+        branch = newBranch();
+        branch.setHospital(savedHospital);
+        branch = branchRepo.save(branch);
         var branchOptional = branchRepo.findByBranchName(branch.getBranchName());
         assertThat(branchOptional).isNotEmpty();
     }
@@ -54,25 +84,34 @@ class BranchPersistenceTest {
         var hospitalOptional = hospitalRepo.findByHospitalName("$5^");
         assertThat(hospitalOptional).isEmpty();
     }
+
     @Test
     void when_search_branch_return_success() {
-        var branch = newBranch();
-        branchRepo.save(branch);
+        var savedHospital = hospitalRepo.save(hospital);
+        branch = newBranch();
+        branch.setHospital(savedHospital);
+        branch = branchRepo.save(branch);
         var pageRequest = of(0, 50);
         var searchDtoList = branchRepo.searchByBranchNameContaining("port", pageRequest);
         assertThat(searchDtoList).isNotEmpty();
     }
+
     @Test
     void when_get_branch_by_id_then_return_success() {
-        var branch = newBranch();
-        branchRepo.save(branch);
+        var savedHospital = hospitalRepo.save(hospital);
+        branch = newBranch();
+        branch.setHospital(savedHospital);
+        branch = branchRepo.save(branch);;
         var branchOptional = branchRepo.findBranchById(branch.getId());
         assertThat(branchOptional).isNotEmpty();
     }
+
     @Test
     void when_get_all_branch_then_return_success() {
-        var branch = newBranch();
-        branchRepo.save(branch);
+        var savedHospital = hospitalRepo.save(hospital);
+        branch = newBranch();
+        branch.setHospital(savedHospital);
+        branch = branchRepo.save(branch);
         var pageRequest = of(0, 50);
         var branchRepoAllBranch = branchRepo.getAllBranch(pageRequest);
         assertThat(branchRepoAllBranch).isNotEmpty();
@@ -90,20 +129,10 @@ class BranchPersistenceTest {
         common.setFlag(true);
         common.setStatus(true);
 
-        var hospital = new Hospital();
-        hospital.setId(1L);
-        hospital.setHospitalName("AA");
-        hospital.setCommon(common);
-        hospital.setAddress(address);
-        hospital.setFoundedAt("1998");
-        hospitalRepo.save(hospital);
-
-
         var branch = new Branch();
         branch.setBranchName("Port luis");
         branch.setCommon(common);
         branch.setAddress(address);
-        branch.setHospital(hospital);
         return branch;
     }
 
